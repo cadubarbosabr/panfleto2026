@@ -4,6 +4,7 @@
 
 import { deviceEngine } from './device.js';
 import { UrnaSimulator } from './urna.js';
+import { panfletometro } from './counter.js';
 import { 
   formatWhatsAppMessage, 
   copyToClipboard, 
@@ -984,6 +985,7 @@ class App {
       const stateName = stateObj ? stateObj.nome : this.currentUf;
 
       await saveFlyerToGallery(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
+      panfletometro.increment(1, true);
       this.showToast("✅ Imagem salva com sucesso na pasta de downloads / fotos!", "success");
     } catch (err) {
       console.error("Erro ao salvar foto:", err);

@@ -4,6 +4,7 @@
 // ==========================================================================
 
 import { urnaAudio } from './audio.js';
+import { panfletometro } from './counter.js';
 
 export class UrnaSimulator {
   constructor(app) {
@@ -174,6 +175,7 @@ export class UrnaSimulator {
     this.screenActive.style.display = 'none';
     this.screenFim.style.display = 'flex';
     urnaAudio.playConfirmaFim();
+    panfletometro.increment(1, true);
 
     setTimeout(() => {
       if (this.modal.classList.contains('open')) {
