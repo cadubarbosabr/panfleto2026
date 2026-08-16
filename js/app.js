@@ -678,12 +678,34 @@ class App {
     this.renderCard(cargoKey);
     this.showToast(`${candidate.nm} (${candidate.nr}) selecionado!`, "success");
 
-    // Auto-advance to next cargo smoothly in Step Mode
+    this.triggerAutoAdvance(cargoKey);
+  }
+
+  triggerAutoAdvance(cargoKey) {
     if (this.flowMode === 'step') {
       const currIdx = CARGO_ORDER.indexOf(cargoKey);
       if (currIdx < CARGO_ORDER.length - 1) {
+        const nextIdx = currIdx + 1;
+        const nextCargo = CARGO_ORDER[nextIdx];
         setTimeout(() => {
-          this.goToStep(currIdx + 1, true);
+          this.goToStep(nextIdx, true);
+          setTimeout(() => {
+            document.getElementById(`input-search-${nextCargo}`)?.focus();
+          }, 320);
+        }, 360);
+      } else {
+        // Last step (Presidente): glide directly to the completion hub
+        setTimeout(() => {
+          const hub = document.getElementById('flyer-completion-section');
+          if (hub) {
+            const offset = 70;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = hub.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            deviceEngine.haptic('confirm');
+          }
         }, 450);
       }
     }
@@ -709,14 +731,7 @@ class App {
     this.renderCard(cargoKey);
     this.showToast(`Voto definido como ${sel.nm}`, "success");
 
-    if (this.flowMode === 'step') {
-      const currIdx = CARGO_ORDER.indexOf(cargoKey);
-      if (currIdx < CARGO_ORDER.length - 1) {
-        setTimeout(() => {
-          this.goToStep(currIdx + 1, true);
-        }, 450);
-      }
-    }
+    this.triggerAutoAdvance(cargoKey);
   }
 
   clearSelection(cargoKey) {
