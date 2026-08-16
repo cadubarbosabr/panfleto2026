@@ -507,6 +507,29 @@ body {
   transform: translateY(-1px);
 }
 
+.btn-new-flyer {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: var(--accent-emerald);
+  font-weight: 700;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-size: 0.85rem;
+}
+
+.btn-new-flyer:hover {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: var(--accent-emerald);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
 /* ==========================================================================
    WELCOME STATE ONBOARDING MODAL / SELECTION SCREEN
    ========================================================================== */
@@ -2395,42 +2418,52 @@ body {
   max-width: 520px;
 }
 
-/* Format selector tabs */
+/* Format selector: Independent format buttons */
 .final-photo-format-tabs {
   display: flex;
-  background: rgba(0, 0, 0, 0.35);
-  padding: 0.3rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  gap: 0.35rem;
-  max-width: 480px;
+  gap: 0.65rem;
+  max-width: 520px;
   width: 100%;
   justify-content: center;
+  flex-wrap: wrap;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
 .flyer-tab-btn {
-  flex: 1;
-  background: transparent;
-  border: none;
+  flex: 1 1 auto;
+  min-width: 135px;
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid var(--border-color);
   color: var(--text-secondary);
   font-weight: 700;
-  font-size: 0.825rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  backdrop-filter: blur(8px);
 }
 
 .flyer-tab-btn:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(51, 65, 85, 0.85);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .flyer-tab-btn.active {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  border-color: #10b981;
   color: #ffffff;
-  box-shadow: 0 2px 8px var(--accent-emerald-glow);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
 }
 
 /* Live Photo Canvas Display */

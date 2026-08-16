@@ -1083,6 +1083,10 @@ class App {
     // Open Welcome State Modal button in top bar
     document.getElementById('btn-open-state-modal')?.addEventListener('click', () => this.openWelcomeStateModal());
 
+    // Clear / New flyer buttons (Inside state controls & completion section)
+    document.getElementById('btn-clear-all')?.addEventListener('click', () => this.clearAllSelections());
+    document.getElementById('btn-clear-all-bottom')?.addEventListener('click', () => this.clearAllSelections());
+
     // Region tabs in Welcome Modal
     const regionTabs = document.getElementById('region-filter-tabs');
     if (regionTabs) {
