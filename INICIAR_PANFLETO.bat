@@ -6,28 +6,27 @@ echo ========================================================
 echo.
 
 set DENO_PATH=%USERPROFILE%\AppData\Local\agy\bin\deno.exe
-if not exist "%DENO_PATH%" (
-    where deno >nul 2>&1
-    if %errorlevel% equ 0 (
-        set DENO_PATH=deno
-    ) else (
-        echo [ERRO] Deno nao foi encontrado no sistema.
-        pause
-        exit /b 1
-    )
+if exist "%DENO_PATH%" goto RUN_DENO
+
+where deno >nul 2>&1
+if %errorlevel% equ 0 (
+    set DENO_PATH=deno
+    goto RUN_DENO
 )
 
-echo [1/2] Iniciando Servidor Local em http://localhost:3000 ...
-start /B "" "%DENO_PATH%" run --allow-net --allow-read server.ts
+where python >nul 2>&1
+if %errorlevel% equ 0 (
+    echo [1/2] Iniciando Servidor Local via Python na porta 3000...
+    start http://localhost:3000
+    python -m http.server 3000
+    exit /b 0
+)
 
-timeout /t 2 /nobreak >nul
+echo Abrindo index.html diretamente no navegador...
+start index.html
+exit /b 0
 
-echo [2/2] Abrindo navegador...
+:RUN_DENO
+echo [1/2] Iniciando Servidor Local na porta 3000...
 start http://localhost:3000
-
-echo.
-echo ========================================================
-echo   Servidor ativo em: http://localhost:3000
-echo   Pressione Ctrl+C nesta janela para encerrar.
-echo ========================================================
-"%DENO_PATH%" run --allow-net --allow-read server.ts
+"%DENO_PATH%" run --allow-net --allow-read "data:text/typescript,import { serveDir } from 'jsr:@std/http/file-server'; Deno.serve({ port: 3000 }, (req) => serveDir(req, { fsRoot: '.' }));"

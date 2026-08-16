@@ -53,33 +53,29 @@ A plataforma permite que qualquer eleitor brasileiro selecione seu estado, pesqu
 
 ```
 panfleto2026/
-├── public/
-│   ├── index.html           # Interface principal do webapp
-│   ├── css/
-│   │   └── style.css        # Design System, temas e regras mobile
-│   ├── js/
-│   │   ├── app.js           # Orquestrador da aplicação e gerenciamento de estado
-│   │   ├── urna.js          # Lógica e máquina de estados da Urna Eletrônica
-│   │   ├── audio.js         # Síntese Web Audio dos sons da urna do TSE
-│   │   ├── export.js        # Motor de renderização Canvas e compartilhamento social
-│   │   └── html2canvas.min.js # Captura DOM offline
-│   ├── data/
-│   │   ├── states.json      # Metadados e contagens dos 27 estados
-│   │   ├── presidente.json  # 12 Candidatos à Presidência e Vices
-│   │   └── <UF>.json        # Candidatos específicos de cada estado (AC.json ... TO.json)
-│   └── fotos/               # Fotos oficiais dos candidatos extraídas do TSE
-├── server.ts                # Servidor HTTP estático em Deno / TypeScript
-├── vercel.json              # Configuração otimizada para deploy na Vercel
-├── package.json             # Metadados e scripts de execução
-├── INICIAR_PANFLETO.bat     # Inicializador rápido para Windows
-└── README.md                # Documentação oficial do projeto
+├── index.html           # Interface principal do webapp (Root do repositório)
+├── css/
+│   └── style.css        # Design System, temas e regras mobile
+├── js/
+│   ├── app.js           # Orquestrador da aplicação e gerenciamento de estado
+│   ├── urna.js          # Lógica e máquina de estados da Urna Eletrônica
+│   ├── audio.js         # Síntese Web Audio dos sons da urna do TSE
+│   ├── export.js        # Motor de renderização Canvas, handles e post social
+│   └── html2canvas.min.js # Captura DOM offline
+├── data/
+│   ├── states.json      # Metadados e contagens dos 27 estados
+│   ├── presidente.json  # 12 Candidatos à Presidência e Vices
+│   └── <UF>.json        # Candidatos específicos de cada estado (AC.json ... TO.json)
+├── fotos/               # Fotos oficiais dos candidatos extraídas do TSE
+├── INICIAR_PANFLETO.bat # Inicializador rápido para Windows
+└── README.md            # Documentação oficial do projeto
 ```
 
 ---
 
-## ☁️ Como Publicar na Vercel (Deploy em 1 Minuto)
+## ☁️ Como Publicar na Vercel (Zero Config)
 
-Este repositório está **100% pronto e configurado para a Vercel** com `vercel.json` pré-otimizado (inclui cache inteligente de imagens e rotas estáticas).
+Este repositório é um **site estático puro e limpo (Zero Config)**. A Vercel detecta o `index.html` na raiz imediatamente.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcadubarbosabr%2Fpanfleto2026)
 
@@ -87,8 +83,8 @@ Este repositório está **100% pronto e configurado para a Vercel** com `vercel.
 1. Acesse o painel da [Vercel](https://vercel.com).
 2. Clique em **"Add New..."** → **"Project"**.
 3. Selecione o repositório **`cadubarbosabr/panfleto2026`** e clique em **"Import"**.
-4. A Vercel detectará automaticamente a pasta `public/` e as rotas definidas em `vercel.json`. Não precisa alterar nenhuma configuração!
-5. Clique em **"Deploy"** e em poucos segundos seu link público HTTPS estará no ar!
+4. Framework Preset: **Other** (ou padrão). Root Directory: `./` (padrão).
+5. Clique em **"Deploy"** e em poucos segundos o app estará no ar!
 
 ---
 
