@@ -947,9 +947,13 @@ class App {
   setupEventListeners() {
     document.getElementById('btn-toggle-theme')?.addEventListener('click', () => this.toggleTheme());
 
-    // Mode tabs (Passo a Passo vs Ver Todos)
+    // Mode tabs (Passo a Passo vs Ver Todos vs Modo Urna)
     document.getElementById('btn-mode-step')?.addEventListener('click', () => this.setFlowMode('step'));
     document.getElementById('btn-mode-all')?.addEventListener('click', () => this.setFlowMode('all'));
+    document.getElementById('btn-mode-urna')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
+      this.urnaSimulator.open(true);
+    });
 
     // Segmented Cargo Nav Pills
     CARGO_ORDER.forEach(cargo => {
@@ -1121,6 +1125,10 @@ class App {
       this.urnaSimulator.open(true);
     });
     document.getElementById('btn-close-urna')?.addEventListener('click', () => {
+      this.urnaSimulator.close();
+    });
+    document.getElementById('btn-urna-switch-to-web')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
       this.urnaSimulator.close();
     });
     document.getElementById('modal-urna')?.addEventListener('click', (e) => {
