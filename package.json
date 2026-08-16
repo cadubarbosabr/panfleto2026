@@ -2,8 +2,5 @@
   "name": "panfleto2026",
   "version": "1.0.0",
   "private": true,
-  "description": "Plataforma Oficial de Criação de Colas e Panfletos Eleitorais Digitais 2026",
-  "scripts": {
-    "build": "echo 'Static build - no compilation needed'"
-  }
+  "description": "Plataforma Oficial de Criação de Colas e Panfletos Eleitorais Digitais 2026"
 }
