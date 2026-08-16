@@ -1,0 +1,19 @@
+{
+  "name": "panfleto2026",
+  "version": "1.0.0",
+  "description": "Panfleto Eleitoral 2026 • Cola Digital & Simulador de Urna Eletrônica (TSE 2026)",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "deno run --allow-net --allow-read server.ts",
+    "start": "deno run --allow-net --allow-read server.ts"
+  },
+  "keywords": [
+    "eleicoes-2026",
+    "urna-eletronica",
+    "tse",
+    "cola-eleitoral",
+    "panfleto-digital"
+  ],
+  "author": "Cadu Barbosa",
+  "license": "MIT"
+}

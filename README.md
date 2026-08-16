@@ -69,9 +69,26 @@ panfleto2026/
 │   │   └── <UF>.json        # Candidatos específicos de cada estado (AC.json ... TO.json)
 │   └── fotos/               # Fotos oficiais dos candidatos extraídas do TSE
 ├── server.ts                # Servidor HTTP estático em Deno / TypeScript
+├── vercel.json              # Configuração otimizada para deploy na Vercel
+├── package.json             # Metadados e scripts de execução
 ├── INICIAR_PANFLETO.bat     # Inicializador rápido para Windows
 └── README.md                # Documentação oficial do projeto
 ```
+
+---
+
+## ☁️ Como Publicar na Vercel (Deploy em 1 Minuto)
+
+Este repositório está **100% pronto e configurado para a Vercel** com `vercel.json` pré-otimizado (inclui cache inteligente de imagens e rotas estáticas).
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcadubarbosabr%2Fpanfleto2026)
+
+### Passo a Passo:
+1. Acesse o painel da [Vercel](https://vercel.com).
+2. Clique em **"Add New..."** → **"Project"**.
+3. Selecione o repositório **`cadubarbosabr/panfleto2026`** e clique em **"Import"**.
+4. A Vercel detectará automaticamente a pasta `public/` e as rotas definidas em `vercel.json`. Não precisa alterar nenhuma configuração!
+5. Clique em **"Deploy"** e em poucos segundos seu link público HTTPS estará no ar!
 
 ---
 
