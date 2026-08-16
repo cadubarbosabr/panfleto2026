@@ -1,0 +1,299 @@
+[
+  {
+    "uf": "AC",
+    "nome": "Acre",
+    "totalCandidatos": 347,
+    "cargos": {
+      "governadores": 6,
+      "senadores": 8,
+      "deputadosFederais": 97,
+      "deputadosEstaduais": 236
+    }
+  },
+  {
+    "uf": "AL",
+    "nome": "Alagoas",
+    "totalCandidatos": 257,
+    "cargos": {
+      "governadores": 4,
+      "senadores": 7,
+      "deputadosFederais": 108,
+      "deputadosEstaduais": 138
+    }
+  },
+  {
+    "uf": "AM",
+    "nome": "Amazonas",
+    "totalCandidatos": 435,
+    "cargos": {
+      "governadores": 7,
+      "senadores": 9,
+      "deputadosFederais": 137,
+      "deputadosEstaduais": 282
+    }
+  },
+  {
+    "uf": "AP",
+    "nome": "Amapá",
+    "totalCandidatos": 293,
+    "cargos": {
+      "governadores": 5,
+      "senadores": 9,
+      "deputadosFederais": 89,
+      "deputadosEstaduais": 190
+    }
+  },
+  {
+    "uf": "BA",
+    "nome": "Bahia",
+    "totalCandidatos": 1172,
+    "cargos": {
+      "governadores": 7,
+      "senadores": 10,
+      "deputadosFederais": 527,
+      "deputadosEstaduais": 628
+    }
+  },
+  {
+    "uf": "CE",
+    "nome": "Ceará",
+    "totalCandidatos": 664,
+    "cargos": {
+      "governadores": 8,
+      "senadores": 8,
+      "deputadosFederais": 287,
+      "deputadosEstaduais": 361
+    }
+  },
+  {
+    "uf": "DF",
+    "nome": "Distrito Federal",
+    "totalCandidatos": 607,
+    "cargos": {
+      "governadores": 10,
+      "senadores": 13,
+      "deputadosFederais": 164,
+      "deputadosEstaduais": 420
+    }
+  },
+  {
+    "uf": "ES",
+    "nome": "Espírito Santo",
+    "totalCandidatos": 553,
+    "cargos": {
+      "governadores": 5,
+      "senadores": 11,
+      "deputadosFederais": 135,
+      "deputadosEstaduais": 402
+    }
+  },
+  {
+    "uf": "GO",
+    "nome": "Goiás",
+    "totalCandidatos": 859,
+    "cargos": {
+      "governadores": 6,
+      "senadores": 11,
+      "deputadosFederais": 256,
+      "deputadosEstaduais": 586
+    }
+  },
+  {
+    "uf": "MA",
+    "nome": "Maranhão",
+    "totalCandidatos": 570,
+    "cargos": {
+      "governadores": 8,
+      "senadores": 11,
+      "deputadosFederais": 271,
+      "deputadosEstaduais": 280
+    }
+  },
+  {
+    "uf": "MG",
+    "nome": "Minas Gerais",
+    "totalCandidatos": 1765,
+    "cargos": {
+      "governadores": 11,
+      "senadores": 17,
+      "deputadosFederais": 749,
+      "deputadosEstaduais": 988
+    }
+  },
+  {
+    "uf": "MS",
+    "nome": "Mato Grosso do Sul",
+    "totalCandidatos": 391,
+    "cargos": {
+      "governadores": 8,
+      "senadores": 10,
+      "deputadosFederais": 122,
+      "deputadosEstaduais": 251
+    }
+  },
+  {
+    "uf": "MT",
+    "nome": "Mato Grosso",
+    "totalCandidatos": 414,
+    "cargos": {
+      "governadores": 5,
+      "senadores": 10,
+      "deputadosFederais": 135,
+      "deputadosEstaduais": 264
+    }
+  },
+  {
+    "uf": "PA",
+    "nome": "Pará",
+    "totalCandidatos": 684,
+    "cargos": {
+      "governadores": 6,
+      "senadores": 11,
+      "deputadosFederais": 261,
+      "deputadosEstaduais": 406
+    }
+  },
+  {
+    "uf": "PB",
+    "nome": "Paraíba",
+    "totalCandidatos": 403,
+    "cargos": {
+      "governadores": 6,
+      "senadores": 10,
+      "deputadosFederais": 180,
+      "deputadosEstaduais": 207
+    }
+  },
+  {
+    "uf": "PE",
+    "nome": "Pernambuco",
+    "totalCandidatos": 920,
+    "cargos": {
+      "governadores": 8,
+      "senadores": 12,
+      "deputadosFederais": 386,
+      "deputadosEstaduais": 514
+    }
+  },
+  {
+    "uf": "PI",
+    "nome": "Piauí",
+    "totalCandidatos": 332,
+    "cargos": {
+      "governadores": 12,
+      "senadores": 21,
+      "deputadosFederais": 158,
+      "deputadosEstaduais": 141
+    }
+  },
+  {
+    "uf": "PR",
+    "nome": "Paraná",
+    "totalCandidatos": 1037,
+    "cargos": {
+      "governadores": 8,
+      "senadores": 9,
+      "deputadosFederais": 414,
+      "deputadosEstaduais": 606
+    }
+  },
+  {
+    "uf": "RJ",
+    "nome": "Rio de Janeiro",
+    "totalCandidatos": 1966,
+    "cargos": {
+      "governadores": 9,
+      "senadores": 16,
+      "deputadosFederais": 778,
+      "deputadosEstaduais": 1163
+    }
+  },
+  {
+    "uf": "RN",
+    "nome": "Rio Grande do Norte",
+    "totalCandidatos": 287,
+    "cargos": {
+      "governadores": 9,
+      "senadores": 14,
+      "deputadosFederais": 111,
+      "deputadosEstaduais": 153
+    }
+  },
+  {
+    "uf": "RO",
+    "nome": "Rondônia",
+    "totalCandidatos": 400,
+    "cargos": {
+      "governadores": 6,
+      "senadores": 10,
+      "deputadosFederais": 130,
+      "deputadosEstaduais": 254
+    }
+  },
+  {
+    "uf": "RR",
+    "nome": "Roraima",
+    "totalCandidatos": 363,
+    "cargos": {
+      "governadores": 5,
+      "senadores": 13,
+      "deputadosFederais": 105,
+      "deputadosEstaduais": 240
+    }
+  },
+  {
+    "uf": "RS",
+    "nome": "Rio Grande do Sul",
+    "totalCandidatos": 1010,
+    "cargos": {
+      "governadores": 7,
+      "senadores": 13,
+      "deputadosFederais": 454,
+      "deputadosEstaduais": 536
+    }
+  },
+  {
+    "uf": "SC",
+    "nome": "Santa Catarina",
+    "totalCandidatos": 658,
+    "cargos": {
+      "governadores": 8,
+      "senadores": 13,
+      "deputadosFederais": 229,
+      "deputadosEstaduais": 408
+    }
+  },
+  {
+    "uf": "SE",
+    "nome": "Sergipe",
+    "totalCandidatos": 374,
+    "cargos": {
+      "governadores": 6,
+      "senadores": 11,
+      "deputadosFederais": 139,
+      "deputadosEstaduais": 218
+    }
+  },
+  {
+    "uf": "SP",
+    "nome": "São Paulo",
+    "totalCandidatos": 2500,
+    "cargos": {
+      "governadores": 7,
+      "senadores": 14,
+      "deputadosFederais": 1089,
+      "deputadosEstaduais": 1390
+    }
+  },
+  {
+    "uf": "TO",
+    "nome": "Tocantins",
+    "totalCandidatos": 321,
+    "cargos": {
+      "governadores": 7,
+      "senadores": 13,
+      "deputadosFederais": 97,
+      "deputadosEstaduais": 204
+    }
+  }
+]

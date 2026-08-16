@@ -1,0 +1,15 @@
+# Dependencies & Runtimes
+node_modules/
+.deno/
+
+# OS & Temp files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+*.zip
+*.csv
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,291 @@
+[
+  {
+    "sq": "280002542548",
+    "nr": "13",
+    "nm": "LULA",
+    "nmc": "LUIZ INÁCIO LULA DA SILVA",
+    "cg": "PRESIDENTE",
+    "sg": "PT",
+    "pt": "PARTIDO DOS TRABALHADORES",
+    "fed": "PT/PC do B/PV",
+    "col": "PSB / PDT / FEDERAÇÃO BRASIL DA ESPERANÇA - FE BRASIL(PT/PC do B/PV) / FEDERAÇÃO PSOL REDE(PSOL/REDE)",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002542548_div.jpg",
+    "vices": [
+      {
+        "sq": "280002542549",
+        "nr": "13",
+        "nm": "GERALDO ALCKMIN",
+        "nmc": "GERALDO JOSE RODRIGUES ALCKMIN FILHO",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "PSB",
+        "foto": "FBR280002542549_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002540694",
+    "nr": "14",
+    "nm": "RENAN SANTOS",
+    "nmc": "RENAN ANTONIO FERREIRA DOS SANTOS",
+    "cg": "PRESIDENTE",
+    "sg": "MISSÃO",
+    "pt": "PARTIDO MISSÃO",
+    "col": "MISSÃO",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002540694_div.jpg",
+    "vices": [
+      {
+        "sq": "280002540693",
+        "nr": "14",
+        "nm": "CORONEL MEDINA",
+        "nmc": "AROLDO MEDINA",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "MISSÃO",
+        "foto": "FBR280002540693_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002541457",
+    "nr": "16",
+    "nm": "HERTZ DIAS",
+    "nmc": "HERTZ DA CONCEICAO DIAS",
+    "cg": "PRESIDENTE",
+    "sg": "PSTU",
+    "pt": "PARTIDO SOCIALISTA  DOS TRABALHADORES UNIFICADO",
+    "col": "PSTU",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002541457_div.jpg",
+    "vices": [
+      {
+        "sq": "280002541458",
+        "nr": "16",
+        "nm": "VANESSA PORTUGAL",
+        "nmc": "VANESSA PORTUGAL BARBOSA",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "PSTU",
+        "foto": "FBR280002541458_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002551975",
+    "nr": "21",
+    "nm": "EDMILSON COSTA",
+    "nmc": "EDMILSON SILVA COSTA",
+    "cg": "PRESIDENTE",
+    "sg": "PCB",
+    "pt": "PARTIDO COMUNISTA BRASILEIRO",
+    "col": "PCB",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002551975_div.jpg",
+    "vices": [
+      {
+        "sq": "280002551976",
+        "nr": "21",
+        "nm": "CLEUSA SANTOS",
+        "nmc": "CLEUSA DOS SANTOS",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "PCB",
+        "foto": "FBR280002551976_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002551544",
+    "nr": "22",
+    "nm": "FLAVIO BOLSONARO",
+    "nmc": "FLAVIO NANTES BOLSONARO",
+    "cg": "PRESIDENTE",
+    "sg": "PL",
+    "pt": "PARTIDO LIBERAL",
+    "col": "PL",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002551544_div.jpg",
+    "vices": [
+      {
+        "sq": "280002551543",
+        "nr": "22",
+        "nm": "ALFREDO GASPAR",
+        "nmc": "ALFREDO GASPAR DE MENDONÇA NETO",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "PL",
+        "foto": "FBR280002551543_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002552484",
+    "nr": "27",
+    "nm": "CLARIANA BARAO",
+    "nmc": "CLARIANA ZACARKIM BARAO",
+    "cg": "PRESIDENTE",
+    "sg": "DC",
+    "pt": "DEMOCRACIA CRISTÃ",
+    "col": "DC",
+    "uf": "BR",
+    "gen": "FEMININO",
+    "foto": "FBR280002552484_div.jpg",
+    "vices": [
+      {
+        "sq": "280002552485",
+        "nr": "27",
+        "nm": "FABIANA TORQUATO",
+        "nmc": "FABIANA CRISTINA TAVARES TORQUATO",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "DC",
+        "foto": "FBR280002552485_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002552487",
+    "nr": "29",
+    "nm": "RUI COSTA PIMENTA",
+    "nmc": "RUI COSTA PIMENTA",
+    "cg": "PRESIDENTE",
+    "sg": "PCO",
+    "pt": "PARTIDO DA CAUSA OPERÁRIA",
+    "col": "PCO",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002552487_div.jpg",
+    "vices": [
+      {
+        "sq": "280002552486",
+        "nr": "29",
+        "nm": "ANTÔNIO CARLOS",
+        "nmc": "ANTONIO CARLOS SILVA",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "PCO",
+        "foto": "FBR280002552486_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002539826",
+    "nr": "30",
+    "nm": "ZEMA",
+    "nmc": "ROMEU ZEMA NETO",
+    "cg": "PRESIDENTE",
+    "sg": "NOVO",
+    "pt": "PARTIDO NOVO",
+    "col": "NOVO",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002539826_div.jpg",
+    "vices": [
+      {
+        "sq": "280002539825",
+        "nr": "30",
+        "nm": "EDUARDO GIRÃO",
+        "nmc": "LUIS EDUARDO GRANGEIRO GIRÃO",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "NOVO",
+        "foto": "FBR280002539825_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002548139",
+    "nr": "35",
+    "nm": "VETERINÁRIO WILSON GRASSI",
+    "nmc": "WILSON GRASSI JUNIOR",
+    "cg": "PRESIDENTE",
+    "sg": "DEMOCRATA",
+    "pt": "DEMOCRATA",
+    "col": "DEMOCRATA",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002548139_div.jpg",
+    "vices": [
+      {
+        "sq": "280002548140",
+        "nr": "35",
+        "nm": "SUÊD HAIDAR",
+        "nmc": "SUÊD HAIDAR NOGUEIRA",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "DEMOCRATA",
+        "foto": "FBR280002548140_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002551932",
+    "nr": "55",
+    "nm": "RONALDO CAIADO",
+    "nmc": "RONALDO RAMOS CAIADO",
+    "cg": "PRESIDENTE",
+    "sg": "PSD",
+    "pt": "PARTIDO SOCIAL DEMOCRÁTICO",
+    "col": "PSD",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002551932_div.jpg",
+    "vices": [
+      {
+        "sq": "280002551933",
+        "nr": "55",
+        "nm": "GILBERTO KASSAB",
+        "nmc": "GILBERTO KASSAB",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "PSD",
+        "foto": "FBR280002551933_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002551547",
+    "nr": "70",
+    "nm": "ESCRITOR AUGUSTO CURY",
+    "nmc": "AUGUSTO JORGE CURY",
+    "cg": "PRESIDENTE",
+    "sg": "AVANTE",
+    "pt": "AVANTE",
+    "col": "AVANTE",
+    "uf": "BR",
+    "gen": "MASCULINO",
+    "foto": "FBR280002551547_div.jpg",
+    "vices": [
+      {
+        "sq": "280002551546",
+        "nr": "70",
+        "nm": "JÚLIO DELGADO",
+        "nmc": "JULIO CESAR DELGADO",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "AVANTE",
+        "foto": "FBR280002551546_div.jpg"
+      }
+    ]
+  },
+  {
+    "sq": "280002538811",
+    "nr": "80",
+    "nm": "SAMARA",
+    "nmc": "SAMARA MARTINS DA SILVA FEITOSA",
+    "cg": "PRESIDENTE",
+    "sg": "UP",
+    "pt": "UNIDADE POPULAR",
+    "col": "UP",
+    "uf": "BR",
+    "gen": "FEMININO",
+    "foto": "FBR280002538811_div.jpg",
+    "vices": [
+      {
+        "sq": "280002538812",
+        "nr": "80",
+        "nm": "RAQUEL BRÍCIO",
+        "nmc": "RAQUEL NONATO DE BRICIO",
+        "cg": "VICE-PRESIDENTE",
+        "sg": "UP",
+        "foto": "FBR280002538812_div.jpg"
+      }
+    ]
+  }
+]

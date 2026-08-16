@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cola Eleitoral 2026 • Guia Oficial e Simulador do Eleitor</title>
+  <meta name="description" content="Monte e imprima sua cola eleitoral para as Eleições 2026. Escolha seus candidatos a Presidente, Governador, Senador, Deputado Federal e Deputado Estadual com dados oficiais do TSE.">
+  <meta name="keywords" content="cola eleitoral 2026, eleições 2026, candidatos 2026, simulador de urna, TSE, presidente, governador, senador, deputado">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗳️</text></svg>">
+</head>
+<body>
+
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="container header-wrapper">
+      <div class="brand-badge">
+        <div class="brand-icon-box">🗳️</div>
+        <div class="brand-info">
+          <h1>Cola Eleitoral <span class="year-tag">2026</span></h1>
+          <p>Eleições Gerais • 04 de Outubro de 2026</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-primary" id="btn-open-flyer" title="Gerar e Compartilhar Panfleto Digital nas Redes">
+          <span>📱</span>
+          <span>Panfleto Digital</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-save-photo" title="Baixar Imagem HD para Galeria / Downloads">
+          <span>💾</span>
+          <span>Baixar Imagem</span>
+        </button>
+
+        <button class="btn btn-urna" id="btn-open-urna" title="Abrir Simulador de Urna">
+          <span>🗳️</span>
+          <span>Urna</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-share-whatsapp" title="Copiar Texto para WhatsApp">
+          <span>📋</span>
+          <span>WhatsApp</span>
+        </button>
+
+        <button class="btn btn-icon-only" id="btn-toggle-theme" title="Alternar Modo Claro / Escuro">
+          <span>☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- State (UF) Selection Bar -->
+    <section class="state-selector-bar">
+      <div class="state-info-left">
+        <div class="state-badge" id="current-state-badge">SP</div>
+        <div class="state-text">
+          <h2 id="current-state-title">Eleições em São Paulo (SP)</h2>
+          <p id="current-state-count">Carregando candidatos oficiais do estado...</p>
+        </div>
+      </div>
+
+      <div class="state-controls">
+        <button class="btn-change-state" id="btn-open-state-modal">
+          <span>🔄</span>
+          <span>Trocar Estado / Região</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Progress Summary Bar -->
+    <section class="voting-summary-bar">
+      <div class="summary-pill" id="pill-deputadoFederal">
+        <div class="pill-icon">1</div>
+        <div class="pill-data">
+          <span class="pill-title">Dep. Federal</span>
+          <span class="pill-val">Não definido</span>
+        </div>
+      </div>
+
+      <div class="summary-pill" id="pill-deputadoEstadual">
+        <div class="pill-icon">2</div>
+        <div class="pill-data">
+          <span class="pill-title">Dep. Estadual</span>
+          <span class="pill-val">Não definido</span>
+        </div>
+      </div>
+
+      <div class="summary-pill" id="pill-senador1">
+        <div class="pill-icon">3</div>
+        <div class="pill-data">
+          <span class="pill-title">Senador 1</span>
+          <span class="pill-val">Não definido</span>
+        </div>
+      </div>
+
+      <div class="summary-pill" id="pill-senador2">
+        <div class="pill-icon">4</div>
+        <div class="pill-data">
+          <span class="pill-title">Senador 2</span>
+          <span class="pill-val">Não definido</span>
+        </div>
+      </div>
+
+      <div class="summary-pill" id="pill-governador">
+        <div class="pill-icon">5</div>
+        <div class="pill-data">
+          <span class="pill-title">Governador</span>
+          <span class="pill-val">Não definido</span>
+        </div>
+      </div>
+
+      <div class="summary-pill" id="pill-presidente">
+        <div class="pill-icon">6</div>
+        <div class="pill-data">
+          <span class="pill-title">Presidente</span>
+          <span class="pill-val">Não definido</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Voting Cards Grid (Official Ballot Sequence) -->
+    <div class="voting-cards-grid">
+
+      <!-- 1. DEPUTADO FEDERAL -->
+      <section class="vote-card" id="card-deputadoFederal">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="order-badge">1</div>
+            <div class="card-heading">
+              <h3>Deputado Federal <span class="digits-badge">4 DÍGITOS</span> <span class="scope-badge-state" id="badge-scope-deputadoFederal">🏛️ Voto Estadual</span></h3>
+              <p class="card-subtitle">Primeiro cargo a ser votado na Urna Eletrônica</p>
+            </div>
+          </div>
+          <div class="card-header-actions">
+            <button class="btn btn-secondary" id="btn-explore-deputadoFederal">
+              <span>🔍</span>
+              <span>Explorar Candidatos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-input-section">
+            <div class="number-boxes-wrapper" id="digits-deputadoFederal">
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+            </div>
+
+            <div class="search-cand-container">
+              <input type="text" class="search-cand-input" id="input-search-deputadoFederal" placeholder="Digite o nome, número ou partido...">
+              <span class="search-input-icon">🔍</span>
+              <div class="autocomplete-dropdown" id="dropdown-deputadoFederal"></div>
+            </div>
+
+            <div class="quick-vote-options">
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('deputadoFederal', 'branco')">Voto em Branco</button>
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('deputadoFederal', 'nulo')">Voto Nulo</button>
+            </div>
+          </div>
+
+          <div class="selected-cand-preview" id="preview-deputadoFederal"></div>
+        </div>
+      </section>
+
+      <!-- 2. DEPUTADO ESTADUAL / DISTRITAL -->
+      <section class="vote-card" id="card-deputadoEstadual">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="order-badge">2</div>
+            <div class="card-heading">
+              <h3><span id="title-deputado-estadual">Deputado Estadual</span> <span class="digits-badge">5 DÍGITOS</span> <span class="scope-badge-state" id="badge-scope-deputadoEstadual">🏛️ Voto Estadual</span></h3>
+              <p class="card-subtitle">Segundo cargo a ser votado na Urna Eletrônica</p>
+            </div>
+          </div>
+          <div class="card-header-actions">
+            <button class="btn btn-secondary" id="btn-explore-deputadoEstadual">
+              <span>🔍</span>
+              <span>Explorar Candidatos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-input-section">
+            <div class="number-boxes-wrapper" id="digits-deputadoEstadual">
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+            </div>
+
+            <div class="search-cand-container">
+              <input type="text" class="search-cand-input" id="input-search-deputadoEstadual" placeholder="Digite o nome, número ou partido...">
+              <span class="search-input-icon">🔍</span>
+              <div class="autocomplete-dropdown" id="dropdown-deputadoEstadual"></div>
+            </div>
+
+            <div class="quick-vote-options">
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('deputadoEstadual', 'branco')">Voto em Branco</button>
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('deputadoEstadual', 'nulo')">Voto Nulo</button>
+            </div>
+          </div>
+
+          <div class="selected-cand-preview" id="preview-deputadoEstadual"></div>
+        </div>
+      </section>
+
+      <!-- 3. SENADOR - 1ª VAGA -->
+      <section class="vote-card" id="card-senador1">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="order-badge">3</div>
+            <div class="card-heading">
+              <h3>Senador (1ª Vaga) <span class="digits-badge">3 DÍGITOS</span> <span class="scope-badge-state" id="badge-scope-senador1">🏛️ Voto Estadual</span></h3>
+              <p class="card-subtitle">Em 2026, cada estado elege dois senadores (voto para o 1º senador)</p>
+            </div>
+          </div>
+          <div class="card-header-actions">
+            <button class="btn btn-secondary" id="btn-explore-senador1">
+              <span>🔍</span>
+              <span>Explorar Candidatos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-input-section">
+            <div class="number-boxes-wrapper" id="digits-senador1">
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+            </div>
+
+            <div class="search-cand-container">
+              <input type="text" class="search-cand-input" id="input-search-senador1" placeholder="Digite o nome, número ou partido...">
+              <span class="search-input-icon">🔍</span>
+              <div class="autocomplete-dropdown" id="dropdown-senador1"></div>
+            </div>
+
+            <div class="quick-vote-options">
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('senador1', 'branco')">Voto em Branco</button>
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('senador1', 'nulo')">Voto Nulo</button>
+            </div>
+          </div>
+
+          <div class="selected-cand-preview" id="preview-senador1"></div>
+        </div>
+      </section>
+
+      <!-- 4. SENADOR - 2ª VAGA -->
+      <section class="vote-card" id="card-senador2">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="order-badge">4</div>
+            <div class="card-heading">
+              <h3>Senador (2ª Vaga) <span class="digits-badge">3 DÍGITOS</span> <span class="scope-badge-state" id="badge-scope-senador2">🏛️ Voto Estadual</span></h3>
+              <p class="card-subtitle">⚠️ Você deve escolher um candidato <strong>diferente</strong> do 1º senador</p>
+            </div>
+          </div>
+          <div class="card-header-actions">
+            <button class="btn btn-secondary" id="btn-explore-senador2">
+              <span>🔍</span>
+              <span>Explorar Candidatos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-input-section">
+            <div class="number-boxes-wrapper" id="digits-senador2">
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+            </div>
+
+            <div class="search-cand-container">
+              <input type="text" class="search-cand-input" id="input-search-senador2" placeholder="Digite o nome, número ou partido...">
+              <span class="search-input-icon">🔍</span>
+              <div class="autocomplete-dropdown" id="dropdown-senador2"></div>
+            </div>
+
+            <div class="quick-vote-options">
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('senador2', 'branco')">Voto em Branco</button>
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('senador2', 'nulo')">Voto Nulo</button>
+            </div>
+          </div>
+
+          <div class="selected-cand-preview" id="preview-senador2"></div>
+        </div>
+      </section>
+
+      <!-- 5. GOVERNADOR -->
+      <section class="vote-card" id="card-governador">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="order-badge">5</div>
+            <div class="card-heading">
+              <h3>Governador <span class="digits-badge">2 DÍGITOS</span> <span class="scope-badge-state" id="badge-scope-governador">🏛️ Voto Estadual</span></h3>
+              <p class="card-subtitle">Quinto cargo a ser votado na Urna Eletrônica</p>
+            </div>
+          </div>
+          <div class="card-header-actions">
+            <button class="btn btn-secondary" id="btn-explore-governador">
+              <span>🔍</span>
+              <span>Explorar Candidatos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-input-section">
+            <div class="number-boxes-wrapper" id="digits-governador">
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+            </div>
+
+            <div class="search-cand-container">
+              <input type="text" class="search-cand-input" id="input-search-governador" placeholder="Digite o nome, número ou partido...">
+              <span class="search-input-icon">🔍</span>
+              <div class="autocomplete-dropdown" id="dropdown-governador"></div>
+            </div>
+
+            <div class="quick-vote-options">
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('governador', 'branco')">Voto em Branco</button>
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('governador', 'nulo')">Voto Nulo</button>
+            </div>
+          </div>
+
+          <div class="selected-cand-preview" id="preview-governador"></div>
+        </div>
+      </section>
+
+      <!-- 6. PRESIDENTE -->
+      <section class="vote-card" id="card-presidente">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="order-badge">6</div>
+            <div class="card-heading">
+              <h3>Presidente da República <span class="digits-badge">2 DÍGITOS</span> <span class="scope-badge-national">🇧🇷 Cargo Federal (Brasil Todo)</span></h3>
+              <p class="card-subtitle">Último voto na Urna Eletrônica antes da confirmação final • Comum a todos os estados</p>
+            </div>
+          </div>
+          <div class="card-header-actions">
+            <button class="btn btn-secondary" id="btn-explore-presidente">
+              <span>🔍</span>
+              <span>Explorar Candidatos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-input-section">
+            <div class="number-boxes-wrapper" id="digits-presidente">
+              <div class="digit-box"></div>
+              <div class="digit-box"></div>
+            </div>
+
+            <div class="search-cand-container">
+              <input type="text" class="search-cand-input" id="input-search-presidente" placeholder="Digite o nome, número ou partido...">
+              <span class="search-input-icon">🔍</span>
+              <div class="autocomplete-dropdown" id="dropdown-presidente"></div>
+            </div>
+
+            <div class="quick-vote-options">
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('presidente', 'branco')">Voto em Branco</button>
+              <button class="btn-chip" onclick="window.colaApp.selectSpecialVote('presidente', 'nulo')">Voto Nulo</button>
+            </div>
+          </div>
+
+          <div class="selected-cand-preview" id="preview-presidente"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom Actions Toolbar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0; flex-wrap: wrap; gap: 1rem;">
+      <span id="progress-counter" style="font-weight: 700; color: var(--accent-emerald);">0 de 6 votos definidos</span>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button class="btn btn-primary" id="btn-open-flyer-bottom">
+          <span>📱</span>
+          <span>Panfleto Digital (Redes Sociais)</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-save-photo-bottom">
+          <span>💾</span>
+          <span>Baixar Foto (PNG)</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-share-whatsapp-bottom">
+          <span>📋</span>
+          <span>WhatsApp</span>
+        </button>
+
+        <button class="btn" id="btn-clear-all" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+          <span>🗑️</span>
+          <span>Limpar Tudo</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Voter's Guide Section -->
+    <section class="info-section">
+      <h3><span>ℹ️</span> Guia e Regras para o Dia da Votação</h3>
+      <div class="info-cards-grid">
+        <div class="info-card">
+          <div class="info-card-icon">📄</div>
+          <h4>Leve a Cola no Papel</h4>
+          <p>O uso de aparelho celular dentro da cabine de votação é terminantemente <strong>proibido por lei</strong> pelo TSE. Imprima ou anote sua cola em papel!</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">🪪</div>
+          <h4>Documentos Aceitos</h4>
+          <p>Apresente um documento oficial com foto: e-Título (com foto cadastrada), RG, CNH, Passaporte ou Carteira de Trabalho.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">⚖️</div>
+          <h4>Dois Senadores em 2026</h4>
+          <p>Nesta eleição você votará para <strong>2 vagas de senador</strong>. Os votos devem ser para candidatos diferentes, caso contrário o segundo será anulado.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">⏰</div>
+          <h4>Horário Unificado</h4>
+          <p>A votação ocorrerá das <strong>08h00 às 17h00</strong> no horário de Brasília em todo o território nacional.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       MODAL: CANDIDATE EXPLORER
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modal-explorer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 id="explorer-modal-title">Explorar Candidatos</h3>
+          <p id="explorer-modal-subtitle">Selecione um candidato para adicionar à sua cola</p>
+        </div>
+        <button class="btn-close-modal" id="btn-close-explorer" title="Fechar">✕</button>
+      </div>
+
+      <div class="modal-filters">
+        <input type="text" class="modal-search-input" id="explorer-search-input" placeholder="Buscar por nome, número ou apelido...">
+        <select class="party-filter-select" id="explorer-party-filter">
+          <option value="">Todos os Partidos</option>
+        </select>
+      </div>
+
+      <div class="modal-body-scroll">
+        <div class="explorer-grid" id="explorer-candidates-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: URNA ELETRÔNICA SIMULATOR
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modal-urna">
+    <div class="modal-card" style="max-width: 960px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3>🗳️ Simulador Oficial da Urna Eletrônica</h3>
+          <p>Treine sua votação no modelo idêntico ao da Justiça Eleitoral</p>
+        </div>
+        <button class="btn-close-modal" id="btn-close-urna" title="Fechar">✕</button>
+      </div>
+
+      <div class="modal-body-scroll" style="background: #0f172a; padding: 2rem;">
+        <div class="urna-container">
+
+          <!-- Urna LCD Screen -->
+          <div class="urna-screen-section">
+            <div id="urna-screen-active" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+              <div>
+                <div class="urna-screen-header">
+                  <h4>SEU VOTO PARA</h4>
+                  <div class="urna-screen-cargo" id="urna-cargo-title">DEPUTADO FEDERAL</div>
+                </div>
+
+                <div class="urna-screen-content">
+                  <div class="urna-screen-data">
+                    <div class="urna-line">
+                      <span class="urna-line-label">Número:</span>
+                      <div class="urna-screen-digits" id="urna-digits-box"></div>
+                    </div>
+
+                    <div class="urna-line">
+                      <span class="urna-line-label">Nome:</span>
+                      <span class="urna-line-value" id="urna-cand-name">—</span>
+                    </div>
+
+                    <div class="urna-line">
+                      <span class="urna-line-label">Partido:</span>
+                      <span class="urna-line-value" id="urna-cand-party">—</span>
+                    </div>
+
+                    <div class="urna-line" id="urna-vice-row" style="display: none;">
+                      <span class="urna-line-label">Vice/Suplente:</span>
+                      <span class="urna-line-value" id="urna-vice-name">—</span>
+                    </div>
+                  </div>
+
+                  <div class="urna-screen-photo-box" id="urna-photo-box" style="display: none;">
+                    <img id="urna-photo-img" class="urna-screen-photo" src="" alt="Foto Candidato">
+                  </div>
+                </div>
+              </div>
+
+              <div class="urna-screen-footer" id="urna-screen-notice">
+                Aperte a tecla:<br>
+                <strong>VERDE</strong> para CONFIRMAR<br>
+                <strong>LARANJA</strong> para CORRIGIR
+              </div>
+            </div>
+
+            <!-- FIM Screen -->
+            <div id="urna-screen-fim" class="urna-screen-fim" style="display: none;">
+              <div class="urna-fim-text">FIM</div>
+              <div class="urna-gravando-text">GRAVANDO</div>
+              <button class="btn btn-primary" onclick="window.colaApp.urnaSimulator.open(true)" style="margin-top: 1.5rem;">
+                🔄 Votar Novamente
+              </button>
+            </div>
+          </div>
+
+          <!-- Urna Physical Keypad -->
+          <div class="urna-keypad-section" id="urna-keypad">
+            <div class="urna-tse-logo">JUSTIÇA ELEITORAL</div>
+
+            <div class="urna-keys-grid">
+              <button class="key-num" data-num="1">1</button>
+              <button class="key-num" data-num="2">2</button>
+              <button class="key-num" data-num="3">3</button>
+              <button class="key-num" data-num="4">4</button>
+              <button class="key-num" data-num="5">5</button>
+              <button class="key-num" data-num="6">6</button>
+              <button class="key-num" data-num="7">7</button>
+              <button class="key-num" data-num="8">8</button>
+              <button class="key-num" data-num="9">9</button>
+              <div class="key-zero-wrapper">
+                <button class="key-num" data-num="0">0</button>
+              </div>
+            </div>
+
+            <div class="urna-action-keys">
+              <button class="key-branco" id="btn-urna-branco">BRANCO</button>
+              <button class="key-corrige" id="btn-urna-corrige">CORRIGE</button>
+              <button class="key-confirma" id="btn-urna-confirma">CONFIRMA</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: PANFLETO DIGITAL / IMPRESSÃO DIGITAL MODERNA
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modal-digital-flyer">
+    <div class="flyer-modal-card">
+      <div class="flyer-modal-header">
+        <div class="modal-title-group">
+          <h3>📱 Panfleto Digital • Cola Eleitoral 2026</h3>
+          <p>Formato moderno em alta resolução para compartilhar nas redes sociais</p>
+        </div>
+        <button class="btn-close-modal" id="btn-close-flyer" title="Fechar">✕</button>
+      </div>
+
+      <div class="flyer-format-toolbar">
+        <div class="flyer-format-tabs" id="flyer-format-tabs">
+          <button class="flyer-tab-btn active" data-format="stories">📱 Stories / Status (9:16)</button>
+          <button class="flyer-tab-btn" data-format="post">🖼️ Post / Feed (4:5)</button>
+          <button class="flyer-tab-btn" data-format="square">📄 Card Quadrado (1:1)</button>
+        </div>
+
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
+          💡 Perfeito para postar no Instagram, WhatsApp e redes
+        </div>
+      </div>
+
+      <div class="flyer-viewer-body">
+        <div class="flyer-canvas-container" id="flyer-preview-container">
+          <!-- Canvas will be dynamically rendered here -->
+        </div>
+      </div>
+
+      <div class="flyer-modal-actions">
+        <button class="btn btn-primary" id="btn-flyer-share" style="background: linear-gradient(135deg, #2563eb, #3b82f6); border-color: #3b82f6;">
+          <span>📲</span>
+          <span>Compartilhar nas Redes</span>
+        </button>
+
+        <button class="btn btn-primary" id="btn-flyer-download">
+          <span>💾</span>
+          <span>Baixar Imagem HD (PNG)</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-flyer-copy">
+          <span>📋</span>
+          <span>Copiar Imagem</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-flyer-print">
+          <span>🖨️</span>
+          <span>Imprimir Colorido</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: ONBOARDING / SELEÇÃO DE ESTADO
+       ========================================================================== -->
+  <div class="welcome-state-modal" id="modal-welcome-state">
+    <div class="welcome-state-box">
+      <div class="welcome-state-header">
+        <div class="welcome-title-tag">🇧🇷 Eleições Gerais 2026</div>
+        <h2>Para qual estado você deseja montar a Cola?</h2>
+        <p>
+          Selecione o estado onde você vota para filtrar os candidatos a <strong>Deputados</strong>, <strong>Senadores</strong> e <strong>Governador</strong>.
+        </p>
+        <div class="welcome-national-notice">
+          <span>🇧🇷</span>
+          <span>O cargo de <strong>Presidente da República</strong> é comum para todo o Brasil.</span>
+        </div>
+      </div>
+
+      <div class="region-tabs-bar">
+        <div class="region-tabs" id="region-filter-tabs">
+          <button class="region-tab-btn active" data-region="TODOS">Todos (27)</button>
+          <button class="region-tab-btn" data-region="SUDESTE">Sudeste</button>
+          <button class="region-tab-btn" data-region="SUL">Sul</button>
+          <button class="region-tab-btn" data-region="NORDESTE">Nordeste</button>
+          <button class="region-tab-btn" data-region="CENTRO-OESTE">Centro-Oeste</button>
+          <button class="region-tab-btn" data-region="NORTE">Norte</button>
+        </div>
+
+        <div class="state-search-box">
+          <input type="text" id="input-search-state" placeholder="Buscar estado ou UF...">
+        </div>
+      </div>
+
+      <div class="welcome-states-grid-scroll">
+        <div class="welcome-states-grid" id="welcome-states-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Area (Formatted like official TSE voting slips) -->
+  <div id="printable-cola-area"></div>
+
+  <!-- App Footer -->
+  <footer class="app-footer">
+    <div class="container">
+      <p>Cola Eleitoral 2026 • Ferramenta cívica desenvolvida com base nos dados oficiais e públicos do Tribunal Superior Eleitoral (TSE).</p>
+      <p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
+        Esta plataforma não possui vínculo partidário. Verifique sempre seus dados no aplicativo oficial e-Título ou no portal do TSE.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Dedicated Screenshot & Flyer Capture Area -->
+  <div id="panfleto-capture-container"></div>
+
+  <!-- Mobile Bottom Floating Action Bar (100% Mobile Friendly) -->
+  <nav class="mobile-bottom-bar" id="mobile-bottom-nav">
+    <button class="btn-mobile-action btn-save-mobile" id="btn-mobile-flyer">
+      <span>📱</span>
+      <span>Panfleto</span>
+    </button>
+    <button class="btn-mobile-action" id="btn-mobile-save">
+      <span>💾</span>
+      <span>Baixar</span>
+    </button>
+    <button class="btn-mobile-action" id="btn-mobile-urna">
+      <span>🗳️</span>
+      <span>Urna</span>
+    </button>
+    <button class="btn-mobile-action" id="btn-mobile-state">
+      <span>🔄</span>
+      <span>Trocar UF</span>
+    </button>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="js/html2canvas.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
