@@ -1,5 +1,5 @@
 // ==========================================================================
-// COLA ELEITORAL 2026 - MAIN APPLICATION LOGIC (100% MOBILE FRIENDLY & DIGITAL FLYER)
+// COLA ELEITORAL 2026 - MAIN APPLICATION LOGIC (100% FLUID MOBILE FLOW)
 // ==========================================================================
 
 import { UrnaSimulator } from './urna.js';
@@ -14,6 +14,24 @@ import {
   getXPostUrl,
   getWhatsAppShareUrl
 } from './export.js';
+
+const CARGO_ORDER = [
+  'deputadoFederal',
+  'deputadoEstadual',
+  'senador1',
+  'senador2',
+  'governador',
+  'presidente'
+];
+
+const CARGO_TITLES = {
+  deputadoFederal: 'Deputado Federal',
+  deputadoEstadual: 'Deputado Estadual',
+  senador1: 'Senador (1ª Vaga)',
+  senador2: 'Senador (2ª Vaga)',
+  governador: 'Governador',
+  presidente: 'Presidente da República'
+};
 
 const STATE_REGIONS = {
   'SP': 'SUDESTE', 'RJ': 'SUDESTE', 'MG': 'SUDESTE', 'ES': 'SUDESTE',
@@ -31,6 +49,8 @@ class App {
     this.stateData = null;
     
     this.selections = this.loadSelections();
+    this.flowMode = window.innerWidth <= 768 ? 'step' : 'all'; // 'step' | 'all'
+    this.currentStepIndex = 0; // 0 to 5
     this.explorerCargoKey = null;
     this.currentRegionFilter = 'TODOS';
     this.currentFlyerFormat = 'stories'; // 'stories' | 'post' | 'square'
@@ -80,6 +100,9 @@ class App {
     this.setupEventListeners();
     this.urnaSimulator = new UrnaSimulator(this);
     
+    // Set initial flow mode
+    this.setFlowMode(this.flowMode);
+
     // Check if user should be asked for the state on startup
     const hasChosenState = localStorage.getItem('cola_2026_uf_chosen');
     if (!hasChosenState || !this.currentUf) {
@@ -107,6 +130,104 @@ class App {
     const themeBtn = document.getElementById('btn-toggle-theme');
     if (themeBtn) {
       themeBtn.innerHTML = next === 'dark' ? '☀️' : '🌙';
+    }
+  }
+
+  // ==========================================================================
+  // FLUID MOBILE STEP FLOW & NAVIGATION CAROUSEL
+  // ==========================================================================
+  setFlowMode(mode) {
+    this.flowMode = mode;
+    const container = document.getElementById('voting-cards-container');
+    const btnStep = document.getElementById('btn-mode-step');
+    const btnAll = document.getElementById('btn-mode-all');
+    const progressWrapper = document.getElementById('step-progress-wrapper');
+
+    if (btnStep) btnStep.classList.toggle('active', mode === 'step');
+    if (btnAll) btnAll.classList.toggle('active', mode === 'all');
+
+    if (container) {
+      container.classList.remove('mode-step', 'mode-all');
+      container.classList.add(`mode-${mode}`);
+    }
+
+    if (mode === 'step') {
+      this.goToStep(this.currentStepIndex, false);
+      if (progressWrapper) progressWrapper.style.display = 'flex';
+    } else {
+      document.querySelectorAll('.vote-card').forEach(c => c.classList.remove('active-step'));
+      if (progressWrapper) progressWrapper.style.display = 'flex';
+      this.updateProgressSummary();
+    }
+  }
+
+  goToStep(stepIndex, shouldScroll = true) {
+    if (stepIndex < 0 || stepIndex >= CARGO_ORDER.length) return;
+    this.currentStepIndex = stepIndex;
+    const cargoKey = CARGO_ORDER[stepIndex];
+
+    // Update active card
+    CARGO_ORDER.forEach((key, idx) => {
+      const card = document.getElementById(`card-${key}`);
+      if (card) {
+        card.classList.toggle('active-step', idx === stepIndex);
+      }
+    });
+
+    // Update Segmented Nav Carousel
+    CARGO_ORDER.forEach((key, idx) => {
+      const pill = document.getElementById(`navpill-${key}`);
+      if (pill) {
+        pill.classList.toggle('active', idx === stepIndex);
+        if (idx === stepIndex) {
+          // Scroll pill into view smoothly inside carousel
+          pill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+      }
+    });
+
+    // Update Step Indicator
+    const stepLabel = document.getElementById('step-progress-label');
+    const stepPct = document.getElementById('step-progress-pct');
+    const stepFill = document.getElementById('step-progress-bar-fill');
+
+    const cargoTitle = this.currentUf === 'DF' && cargoKey === 'deputadoEstadual' ? 'Deputado Distrital' : CARGO_TITLES[cargoKey];
+    const pct = Math.round(((stepIndex + 1) / 6) * 100);
+
+    if (stepLabel) stepLabel.textContent = `Passo ${stepIndex + 1} de 6 • ${cargoTitle}`;
+    if (stepPct) stepPct.textContent = `${pct}% concluído`;
+    if (stepFill) stepFill.style.width = `${pct}%`;
+
+    if (shouldScroll) {
+      const card = document.getElementById(`card-${cargoKey}`);
+      if (card) {
+        const headerOffset = 130;
+        const elementPosition = card.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      }
+    }
+  }
+
+  goToCargo(cargoKey) {
+    const idx = CARGO_ORDER.indexOf(cargoKey);
+    if (idx !== -1) {
+      if ('vibrate' in navigator) navigator.vibrate(25);
+      if (this.flowMode === 'step') {
+        this.goToStep(idx, true);
+      } else {
+        const card = document.getElementById(`card-${cargoKey}`);
+        if (card) {
+          const headerOffset = 130;
+          const elementPosition = card.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+        // Highlight active pill
+        CARGO_ORDER.forEach(k => {
+          document.getElementById(`navpill-${k}`)?.classList.toggle('active', k === cargoKey);
+        });
+      }
     }
   }
 
@@ -144,12 +265,17 @@ class App {
 
       const countEl = document.getElementById('current-state-count');
       if (countEl && stateObj) {
-        countEl.textContent = `${stateObj.totalCandidatos} candidatos oficiais para ${uf} + 12 Presidenciáveis`;
+        countEl.textContent = `${stateObj.totalCandidatos} candidatos para ${uf} + 12 Presidenciáveis`;
       }
 
       const depEstTitle = document.getElementById('title-deputado-estadual');
       if (depEstTitle) {
         depEstTitle.textContent = uf === 'DF' ? 'Deputado Distrital' : 'Deputado Estadual';
+      }
+
+      const navDepEst = document.getElementById('navname-deputadoEstadual');
+      if (navDepEst) {
+        navDepEst.textContent = uf === 'DF' ? 'Dep. Distrital' : 'Dep. Estadual';
       }
 
       const stateScopeBadges = ['deputadoFederal', 'deputadoEstadual', 'senador1', 'senador2', 'governador'];
@@ -307,7 +433,7 @@ class App {
     const previewContainer = document.getElementById('flyer-preview-container');
     if (!previewContainer) return;
 
-    previewContainer.innerHTML = '<div style="color: #10b981; font-weight: 700; padding: 40px;">⏳ Renderizando Panfleto Digital em Alta Definição...</div>';
+    previewContainer.innerHTML = '<div style="color: #10b981; font-weight: 700; padding: 40px; text-align: center;">⏳ Renderizando Panfleto Digital em HD...</div>';
 
     const stateObj = this.states.find(s => s.uf === this.currentUf);
     const stateName = stateObj ? stateObj.nome : this.currentUf;
@@ -462,6 +588,16 @@ class App {
     this.saveSelections();
     this.renderCard(cargoKey);
     this.showToast(`${candidate.nm} (${candidate.nr}) selecionado!`, "success");
+
+    // Auto-advance to next cargo smoothly in Step Mode
+    if (this.flowMode === 'step') {
+      const currIdx = CARGO_ORDER.indexOf(cargoKey);
+      if (currIdx < CARGO_ORDER.length - 1) {
+        setTimeout(() => {
+          this.goToStep(currIdx + 1, true);
+        }, 450);
+      }
+    }
   }
 
   selectSpecialVote(cargoKey, tipo, extra = {}) {
@@ -482,6 +618,15 @@ class App {
     this.saveSelections();
     this.renderCard(cargoKey);
     this.showToast(`Voto definido como ${sel.nm}`, "success");
+
+    if (this.flowMode === 'step') {
+      const currIdx = CARGO_ORDER.indexOf(cargoKey);
+      if (currIdx < CARGO_ORDER.length - 1) {
+        setTimeout(() => {
+          this.goToStep(currIdx + 1, true);
+        }, 450);
+      }
+    }
   }
 
   clearSelection(cargoKey) {
@@ -503,6 +648,9 @@ class App {
       };
       this.saveSelections();
       this.renderAllCards();
+      if (this.flowMode === 'step') {
+        this.goToStep(0, true);
+      }
       this.showToast("Cola eleitoral reiniciada", "warn");
     }
   }
@@ -575,7 +723,7 @@ class App {
               <line x1="23" y1="11" x2="17" y2="11"></line>
             </svg>
             <span>Nenhum candidato selecionado</span>
-            <small style="color:var(--text-muted);font-size:0.75rem;">Digite o nome, número ou explore a lista de candidatos</small>
+            <small style="color:var(--text-muted);font-size:0.75rem;">Digite o nome, número ou explore a lista</small>
           </div>
         `;
       }
@@ -583,30 +731,27 @@ class App {
   }
 
   renderAllCards() {
-    const cargos = ['deputadoFederal', 'deputadoEstadual', 'senador1', 'senador2', 'governador', 'presidente'];
-    cargos.forEach(c => {
+    CARGO_ORDER.forEach(c => {
       this.renderCard(c);
       this.setupAutocomplete(c);
     });
   }
 
   updateProgressSummary() {
-    const cargos = ['deputadoFederal', 'deputadoEstadual', 'senador1', 'senador2', 'governador', 'presidente'];
     let filledCount = 0;
 
-    cargos.forEach(c => {
+    CARGO_ORDER.forEach(c => {
       const sel = this.selections[c];
-      const pill = document.getElementById(`pill-${c}`);
-      if (pill) {
-        const valEl = pill.querySelector('.pill-val');
-        if (sel && sel.nr) {
-          pill.classList.add('filled');
-          if (valEl) valEl.textContent = `${sel.nr} - ${sel.nm}`;
-          filledCount++;
-        } else {
-          pill.classList.remove('filled');
-          if (valEl) valEl.textContent = 'Não definido';
-        }
+      const navStatus = document.getElementById(`navstatus-${c}`);
+      const navPill = document.getElementById(`navpill-${c}`);
+
+      if (sel && sel.nr) {
+        filledCount++;
+        if (navStatus) navStatus.textContent = '✓';
+        if (navPill) navPill.classList.add('has-vote');
+      } else {
+        if (navStatus) navStatus.textContent = '⚪';
+        if (navPill) navPill.classList.remove('has-vote');
       }
     });
 
@@ -741,6 +886,32 @@ class App {
   setupEventListeners() {
     document.getElementById('btn-toggle-theme')?.addEventListener('click', () => this.toggleTheme());
 
+    // Mode tabs (Passo a Passo vs Ver Todos)
+    document.getElementById('btn-mode-step')?.addEventListener('click', () => this.setFlowMode('step'));
+    document.getElementById('btn-mode-all')?.addEventListener('click', () => this.setFlowMode('all'));
+
+    // Segmented Cargo Nav Pills
+    CARGO_ORDER.forEach(cargo => {
+      document.getElementById(`navpill-${cargo}`)?.addEventListener('click', () => {
+        this.goToCargo(cargo);
+      });
+    });
+
+    // Step Nav buttons inside cards
+    document.querySelectorAll('.btn-step-nav').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const stepTo = btn.getAttribute('data-step-to');
+        if (stepTo) {
+          this.goToCargo(stepTo);
+        }
+      });
+    });
+
+    // Finish Step button
+    document.getElementById('btn-step-finish')?.addEventListener('click', () => {
+      this.openDigitalFlyerModal('stories');
+    });
+
     // Post Social Modal Buttons (Header, Bottom toolbar, Mobile bottom nav)
     document.getElementById('btn-open-postar')?.addEventListener('click', () => this.openPostSocialModal());
     document.getElementById('btn-open-postar-bottom')?.addEventListener('click', () => this.openPostSocialModal());
@@ -861,8 +1032,7 @@ class App {
     // Search state in Welcome Modal
     document.getElementById('input-search-state')?.addEventListener('input', () => this.renderWelcomeStatesGrid());
 
-    const cargos = ['deputadoFederal', 'deputadoEstadual', 'senador1', 'senador2', 'governador', 'presidente'];
-    cargos.forEach(c => {
+    CARGO_ORDER.forEach(c => {
       document.getElementById(`btn-explore-${c}`)?.addEventListener('click', () => this.openExplorer(c));
     });
 

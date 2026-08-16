@@ -2,7 +2,7 @@
 <html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Cola Eleitoral 2026 • Guia Oficial e Simulador do Eleitor</title>
   <meta name="description" content="Monte e imprima sua cola eleitoral para as Eleições 2026. Escolha seus candidatos a Presidente, Governador, Senador, Deputado Federal e Deputado Estadual com dados oficiais do TSE.">
   <meta name="keywords" content="cola eleitoral 2026, eleições 2026, candidatos 2026, simulador de urna, TSE, presidente, governador, senador, deputado">
@@ -84,62 +84,67 @@
       </div>
     </section>
 
-    <!-- Progress Summary Bar -->
-    <section class="voting-summary-bar">
-      <div class="summary-pill" id="pill-deputadoFederal">
-        <div class="pill-icon">1</div>
-        <div class="pill-data">
-          <span class="pill-title">Dep. Federal</span>
-          <span class="pill-val">Não definido</span>
-        </div>
+    <!-- Flow Mode & Segmented Cargo Navigation -->
+    <section class="mobile-flow-header">
+      <div class="flow-mode-switch">
+        <button class="btn-mode-tab active" id="btn-mode-step" title="Preencher cargo por cargo de forma fluida">
+          <span>🎯</span> Modo Foco (Passo a Passo)
+        </button>
+        <button class="btn-mode-tab" id="btn-mode-all" title="Ver todos os 6 cargos na mesma página">
+          <span>📋</span> Ver Todos os Cargos
+        </button>
       </div>
 
-      <div class="summary-pill" id="pill-deputadoEstadual">
-        <div class="pill-icon">2</div>
-        <div class="pill-data">
-          <span class="pill-title">Dep. Estadual</span>
-          <span class="pill-val">Não definido</span>
+      <div class="step-progress-wrapper" id="step-progress-wrapper">
+        <div class="step-progress-info">
+          <span class="step-progress-label" id="step-progress-label">Passo 1 de 6 • Deputado Federal</span>
+          <span class="step-progress-pct" id="step-progress-pct">0% concluído</span>
         </div>
-      </div>
-
-      <div class="summary-pill" id="pill-senador1">
-        <div class="pill-icon">3</div>
-        <div class="pill-data">
-          <span class="pill-title">Senador 1</span>
-          <span class="pill-val">Não definido</span>
-        </div>
-      </div>
-
-      <div class="summary-pill" id="pill-senador2">
-        <div class="pill-icon">4</div>
-        <div class="pill-data">
-          <span class="pill-title">Senador 2</span>
-          <span class="pill-val">Não definido</span>
-        </div>
-      </div>
-
-      <div class="summary-pill" id="pill-governador">
-        <div class="pill-icon">5</div>
-        <div class="pill-data">
-          <span class="pill-title">Governador</span>
-          <span class="pill-val">Não definido</span>
-        </div>
-      </div>
-
-      <div class="summary-pill" id="pill-presidente">
-        <div class="pill-icon">6</div>
-        <div class="pill-data">
-          <span class="pill-title">Presidente</span>
-          <span class="pill-val">Não definido</span>
+        <div class="step-progress-bar-bg">
+          <div class="step-progress-bar-fill" id="step-progress-bar-fill" style="width: 16.6%;"></div>
         </div>
       </div>
     </section>
 
+    <!-- Interactive Sticky Segmented Cargo Navigator -->
+    <nav class="cargo-nav-carousel" id="cargo-nav-carousel" aria-label="Navegação entre cargos">
+      <button class="cargo-nav-pill active" data-cargo="deputadoFederal" id="navpill-deputadoFederal">
+        <span class="navpill-num">1</span>
+        <span class="navpill-name">Dep. Federal</span>
+        <span class="navpill-status" id="navstatus-deputadoFederal">⚪</span>
+      </button>
+      <button class="cargo-nav-pill" data-cargo="deputadoEstadual" id="navpill-deputadoEstadual">
+        <span class="navpill-num">2</span>
+        <span class="navpill-name" id="navname-deputadoEstadual">Dep. Estadual</span>
+        <span class="navpill-status" id="navstatus-deputadoEstadual">⚪</span>
+      </button>
+      <button class="cargo-nav-pill" data-cargo="senador1" id="navpill-senador1">
+        <span class="navpill-num">3</span>
+        <span class="navpill-name">Senador 1</span>
+        <span class="navpill-status" id="navstatus-senador1">⚪</span>
+      </button>
+      <button class="cargo-nav-pill" data-cargo="senador2" id="navpill-senador2">
+        <span class="navpill-num">4</span>
+        <span class="navpill-name">Senador 2</span>
+        <span class="navpill-status" id="navstatus-senador2">⚪</span>
+      </button>
+      <button class="cargo-nav-pill" data-cargo="governador" id="navpill-governador">
+        <span class="navpill-num">5</span>
+        <span class="navpill-name">Governador</span>
+        <span class="navpill-status" id="navstatus-governador">⚪</span>
+      </button>
+      <button class="cargo-nav-pill" data-cargo="presidente" id="navpill-presidente">
+        <span class="navpill-num">6</span>
+        <span class="navpill-name">Presidente</span>
+        <span class="navpill-status" id="navstatus-presidente">⚪</span>
+      </button>
+    </nav>
+
     <!-- Voting Cards Grid (Official Ballot Sequence) -->
-    <div class="voting-cards-grid">
+    <div class="voting-cards-grid mode-step" id="voting-cards-container">
 
       <!-- 1. DEPUTADO FEDERAL -->
-      <section class="vote-card" id="card-deputadoFederal">
+      <section class="vote-card active-step" id="card-deputadoFederal" data-step="1" data-cargo="deputadoFederal">
         <div class="card-header">
           <div class="card-title-group">
             <div class="order-badge">1</div>
@@ -179,10 +184,18 @@
 
           <div class="selected-cand-preview" id="preview-deputadoFederal"></div>
         </div>
+
+        <div class="card-step-footer">
+          <span class="step-card-tag">Passo 1 de 6</span>
+          <button class="btn btn-primary btn-step-nav" data-step-to="deputadoEstadual">
+            <span>Próximo Cargo (Dep. Estadual)</span>
+            <span>→</span>
+          </button>
+        </div>
       </section>
 
       <!-- 2. DEPUTADO ESTADUAL / DISTRITAL -->
-      <section class="vote-card" id="card-deputadoEstadual">
+      <section class="vote-card" id="card-deputadoEstadual" data-step="2" data-cargo="deputadoEstadual">
         <div class="card-header">
           <div class="card-title-group">
             <div class="order-badge">2</div>
@@ -223,10 +236,21 @@
 
           <div class="selected-cand-preview" id="preview-deputadoEstadual"></div>
         </div>
+
+        <div class="card-step-footer">
+          <button class="btn btn-secondary btn-step-nav" data-step-to="deputadoFederal">
+            <span>←</span>
+            <span>Anterior</span>
+          </button>
+          <button class="btn btn-primary btn-step-nav" data-step-to="senador1">
+            <span>Próximo (Senador 1)</span>
+            <span>→</span>
+          </button>
+        </div>
       </section>
 
       <!-- 3. SENADOR - 1ª VAGA -->
-      <section class="vote-card" id="card-senador1">
+      <section class="vote-card" id="card-senador1" data-step="3" data-cargo="senador1">
         <div class="card-header">
           <div class="card-title-group">
             <div class="order-badge">3</div>
@@ -265,10 +289,21 @@
 
           <div class="selected-cand-preview" id="preview-senador1"></div>
         </div>
+
+        <div class="card-step-footer">
+          <button class="btn btn-secondary btn-step-nav" data-step-to="deputadoEstadual">
+            <span>←</span>
+            <span>Anterior</span>
+          </button>
+          <button class="btn btn-primary btn-step-nav" data-step-to="senador2">
+            <span>Próximo (Senador 2)</span>
+            <span>→</span>
+          </button>
+        </div>
       </section>
 
       <!-- 4. SENADOR - 2ª VAGA -->
-      <section class="vote-card" id="card-senador2">
+      <section class="vote-card" id="card-senador2" data-step="4" data-cargo="senador2">
         <div class="card-header">
           <div class="card-title-group">
             <div class="order-badge">4</div>
@@ -307,10 +342,21 @@
 
           <div class="selected-cand-preview" id="preview-senador2"></div>
         </div>
+
+        <div class="card-step-footer">
+          <button class="btn btn-secondary btn-step-nav" data-step-to="senador1">
+            <span>←</span>
+            <span>Anterior</span>
+          </button>
+          <button class="btn btn-primary btn-step-nav" data-step-to="governador">
+            <span>Próximo (Governador)</span>
+            <span>→</span>
+          </button>
+        </div>
       </section>
 
       <!-- 5. GOVERNADOR -->
-      <section class="vote-card" id="card-governador">
+      <section class="vote-card" id="card-governador" data-step="5" data-cargo="governador">
         <div class="card-header">
           <div class="card-title-group">
             <div class="order-badge">5</div>
@@ -348,10 +394,21 @@
 
           <div class="selected-cand-preview" id="preview-governador"></div>
         </div>
+
+        <div class="card-step-footer">
+          <button class="btn btn-secondary btn-step-nav" data-step-to="senador2">
+            <span>←</span>
+            <span>Anterior</span>
+          </button>
+          <button class="btn btn-primary btn-step-nav" data-step-to="presidente">
+            <span>Próximo (Presidente)</span>
+            <span>→</span>
+          </button>
+        </div>
       </section>
 
       <!-- 6. PRESIDENTE -->
-      <section class="vote-card" id="card-presidente">
+      <section class="vote-card" id="card-presidente" data-step="6" data-cargo="presidente">
         <div class="card-header">
           <div class="card-title-group">
             <div class="order-badge">6</div>
@@ -388,6 +445,17 @@
           </div>
 
           <div class="selected-cand-preview" id="preview-presidente"></div>
+        </div>
+
+        <div class="card-step-footer">
+          <button class="btn btn-secondary btn-step-nav" data-step-to="governador">
+            <span>←</span>
+            <span>Anterior</span>
+          </button>
+          <button class="btn btn-primary" id="btn-step-finish" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);">
+            <span>Ver Panfleto Pronto</span>
+            <span>🚀</span>
+          </button>
         </div>
       </section>
 
@@ -456,6 +524,7 @@
        ========================================================================== -->
   <div class="modal-backdrop" id="modal-explorer">
     <div class="modal-card">
+      <div class="bottom-sheet-handle"></div>
       <div class="modal-header">
         <div class="modal-title-group">
           <h3 id="explorer-modal-title">Explorar Candidatos</h3>
@@ -482,6 +551,7 @@
        ========================================================================== -->
   <div class="modal-backdrop" id="modal-urna">
     <div class="modal-card" style="max-width: 960px;">
+      <div class="bottom-sheet-handle"></div>
       <div class="modal-header">
         <div class="modal-title-group">
           <h3>🗳️ Simulador Oficial da Urna Eletrônica</h3>
@@ -584,6 +654,7 @@
        ========================================================================== -->
   <div class="modal-backdrop" id="modal-digital-flyer">
     <div class="flyer-modal-card">
+      <div class="bottom-sheet-handle"></div>
       <div class="flyer-modal-header">
         <div class="modal-title-group">
           <h3>📱 Panfleto Digital • Cola Eleitoral 2026</h3>
@@ -639,6 +710,7 @@
        ========================================================================== -->
   <div class="welcome-state-modal" id="modal-welcome-state">
     <div class="welcome-state-box">
+      <div class="bottom-sheet-handle"></div>
       <div class="welcome-state-header">
         <div class="welcome-title-tag">🇧🇷 Eleições Gerais 2026</div>
         <h2>Para qual estado você deseja montar a Cola?</h2>
@@ -690,6 +762,7 @@
        ========================================================================== -->
   <div class="modal-backdrop" id="modal-post-social">
     <div class="post-social-modal-card">
+      <div class="bottom-sheet-handle"></div>
       <div class="post-social-header">
         <div class="modal-title-group">
           <h3>📢 Postar Panfleto nas Redes Sociais</h3>
