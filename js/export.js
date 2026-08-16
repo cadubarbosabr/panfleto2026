@@ -95,7 +95,7 @@ export function getAppSiteUrl(short = false) {
       return short ? host : window.location.origin;
     }
   }
-  return short ? 'panfleto2026.vercel.app' : 'https://panfleto2026.vercel.app';
+  return short ? 'panfletos2026.vercel.app' : 'https://panfletos2026.vercel.app';
 }
 
 function getShortCandidateName(nm) {
