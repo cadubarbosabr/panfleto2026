@@ -6,6 +6,26 @@
   <title>Cola Eleitoral 2026 • Guia Oficial e Simulador do Eleitor</title>
   <meta name="description" content="Monte e imprima sua cola eleitoral para as Eleições 2026. Escolha seus candidatos a Presidente, Governador, Senador, Deputado Federal e Deputado Estadual com dados oficiais do TSE.">
   <meta name="keywords" content="cola eleitoral 2026, eleições 2026, candidatos 2026, simulador de urna, TSE, presidente, governador, senador, deputado">
+  <meta name="theme-color" content="#090d16">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://panfletos2026.vercel.app/">
+  <meta property="og:title" content="Cola Eleitoral 2026 • Guia Oficial e Panfleto do Eleitor">
+  <meta property="og:description" content="Monte seu panfleto eleitoral personalizado para as Eleições 2026 com dados oficiais do TSE. Baixe a foto ou compartilhe nas redes.">
+  <meta property="og:image" content="https://panfletos2026.vercel.app/fotos/lula.jpg">
+
+  <!-- Twitter / 𝕏 -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://panfletos2026.vercel.app/">
+  <meta name="twitter:title" content="Cola Eleitoral 2026 • Guia Oficial e Panfleto do Eleitor">
+  <meta name="twitter:description" content="Monte seu panfleto eleitoral personalizado para as Eleições 2026 com dados oficiais do TSE. Baixe a foto ou compartilhe nas redes.">
+  <meta name="twitter:image" content="https://panfletos2026.vercel.app/fotos/lula.jpg">
+  <meta name="twitter:creator" content="@CaduBarbosaBR">
+
+  <!-- Performance Preload for Critical Data -->
+  <link rel="preload" href="data/states.json" as="fetch" crossorigin>
+  <link rel="preload" href="data/presidente.json" as="fetch" crossorigin>
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +59,7 @@
       <div class="live-counter-pill" id="live-flyer-counter-pill" title="Panfletos e colas geradas em tempo real em todo o Brasil">
         <span class="live-indicator-dot"></span>
         <div class="live-counter-text">
-          <strong id="live-panfletos-count">148</strong>
+          <strong id="live-panfletos-count" aria-live="polite">148</strong>
           <small>panfletos gerados</small>
         </div>
         <span class="live-counter-trend" id="live-counter-trend">+1</span>
@@ -496,7 +516,7 @@
           <label for="social-post-textarea">
             <span>✍️ Texto da Cola (1 linha por cargo):</span>
           </label>
-          <span class="char-counter" id="post-char-counter">0 caracteres</span>
+          <span class="char-counter" id="post-char-counter" aria-live="polite">0 caracteres</span>
         </div>
         <textarea id="social-post-textarea" rows="7" placeholder="Gerando texto da sua cola..."></textarea>
       </div>
@@ -823,5 +843,12 @@
   <!-- Scripts -->
   <script src="js/html2canvas.min.js"></script>
   <script type="module" src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
