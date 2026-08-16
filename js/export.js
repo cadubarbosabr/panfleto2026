@@ -578,7 +578,7 @@ export async function generateCanvasFlyer(stateName, stateUf, selections, format
   return canvas;
 }
 
-// Save flyer to mobile gallery or trigger download
+// Save flyer to mobile gallery or trigger download and open in a new tab
 export async function saveFlyerToGallery(stateName, stateUf, selections, format = 'stories') {
   const canvas = await generateCanvasFlyer(stateName, stateUf, selections, format);
   
@@ -587,18 +587,111 @@ export async function saveFlyerToGallery(stateName, stateUf, selections, format 
       if (!blob) return resolve(false);
 
       const fileName = `panfleto_eleitoral_2026_${stateUf}.png`;
-      const file = new File([blob], fileName, { type: 'image/png' });
+      const blobUrl = URL.createObjectURL(blob);
+      const dataUrl = canvas.toDataURL('image/png');
 
-      // Direct Download (Available everywhere)
+      // 1. Open photo in a new tab
+      try {
+        const newTab = window.open('', '_blank');
+        if (newTab) {
+          newTab.document.write(`
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panfleto Eleitoral 2026 - ${stateUf}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #090d16;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 16px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 12px;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+    }
+    .btn-save {
+      background: #10b981;
+      color: #042f2e;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s;
+    }
+    .btn-save:active { transform: scale(0.96); }
+    .tip {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .img-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      max-width: 800px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <a href="${dataUrl}" download="${fileName}" class="btn-save">💾 Baixar Arquivo</a>
+    <span class="tip">Toque e segure na imagem para salvar na Galeria</span>
+  </div>
+  <div class="img-wrapper">
+    <img src="${dataUrl}" alt="Panfleto Eleitoral 2026 (${stateUf})">
+  </div>
+</body>
+</html>
+          `);
+          newTab.document.close();
+        } else {
+          // If popup blocked, open directly
+          window.open(blobUrl, '_blank');
+        }
+      } catch (e) {
+        window.open(blobUrl, '_blank');
+      }
+
+      // 2. Also trigger direct download
       const link = document.createElement('a');
       link.download = fileName;
-      link.href = URL.createObjectURL(blob);
+      link.href = blobUrl;
       document.body.appendChild(link);
       link.click();
       setTimeout(() => {
-        URL.revokeObjectURL(link.href);
+        URL.revokeObjectURL(blobUrl);
         link.remove();
-      }, 1000);
+      }, 1500);
 
       resolve(true);
     }, 'image/png');
