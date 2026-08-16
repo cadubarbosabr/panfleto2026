@@ -43,6 +43,9 @@ const STATE_REGIONS = {
   'PA': 'NORTE', 'AM': 'NORTE', 'RO': 'NORTE', 'TO': 'NORTE', 'AC': 'NORTE', 'AP': 'NORTE', 'RR': 'NORTE'
 };
 
+const FALLBACK_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+const FALLBACK_PHOTO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='88' viewBox='0 0 72 88'%3E%3Crect width='100%25' height='100%25' fill='%231e293b'/%3E%3Ccircle cx='36' cy='32' r='18' fill='%2394a3b8'/%3E%3Cpath d='M12 78 C12 56 60 56 60 78' fill='%2394a3b8'/%3E%3C/svg%3E";
+
 class App {
   constructor() {
     this.currentUf = localStorage.getItem('cola_2026_uf') || null;
@@ -595,16 +598,25 @@ class App {
     candidates.forEach(cand => {
       const item = document.createElement('div');
       item.className = 'dropdown-item';
+      const photoSrc = cand.foto ? `fotos/${cand.foto}` : FALLBACK_AVATAR;
+      const candName = cand.nm || '';
+      const partyText = cand.sg ? `${cand.sg}${cand.fed ? ' • ' + cand.fed : ''}` : '';
+
       item.innerHTML = `
         <div class="dropdown-item-left">
-          <img class="cand-mini-avatar" src="fotos/${cand.foto}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'34\\' height=\\'34\\' fill=\\'%2394a3b8\\' viewBox=\\'0 0 24 24\\'><path d=\\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\\'/></svg>'">
+          <img class="cand-mini-avatar" src="${photoSrc}">
           <div class="dropdown-cand-names">
-            <span class="dropdown-cand-urnaname">${cand.nm}</span>
-            <span class="dropdown-cand-party">${cand.sg} ${cand.fed ? '• ' + cand.fed : ''}</span>
+            <span class="dropdown-cand-urnaname">${candName}</span>
+            <span class="dropdown-cand-party">${partyText}</span>
           </div>
         </div>
-        <span class="dropdown-cand-number">${cand.nr}</span>
+        <span class="dropdown-cand-number">${cand.nr || ''}</span>
       `;
+
+      const img = item.querySelector('.cand-mini-avatar');
+      if (img) {
+        img.onerror = () => { img.src = FALLBACK_AVATAR; };
+      }
 
       item.addEventListener('click', () => {
         deviceEngine.haptic('selection');
@@ -755,25 +767,29 @@ class App {
           viceHtml = `<div class="vice-info"><span>${s1}${s2}</span></div>`;
         }
 
-        const photoSrc = sel.foto ? `fotos/${sel.foto}` : '';
-        const fallbackSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="72" height="88" viewBox="0 0 72 88"><rect width="100%" height="100%" fill="%231e293b"/><circle cx="36" cy="32" r="18" fill="%2394a3b8"/><path d="M12,78 C12,56 60,56 60,78" fill="%2394a3b8"/></svg>`;
+        const photoSrc = sel.foto ? `fotos/${sel.foto}` : FALLBACK_PHOTO;
 
         previewEl.innerHTML = `
           <div class="cand-photo-wrapper">
-            <img class="cand-photo" src="${photoSrc || fallbackSvg}" onerror="this.src='${fallbackSvg}'" alt="${sel.nm}">
+            <img class="cand-photo" src="${photoSrc}">
           </div>
           <div class="cand-details">
             <div class="cand-meta-badges">
-              <span class="badge-number">${sel.nr}</span>
+              <span class="badge-number">${sel.nr || ''}</span>
               <span class="badge-party">${sel.sg || '—'}</span>
               ${sel.fed ? `<span class="badge-fed">${sel.fed}</span>` : ''}
             </div>
-            <div class="cand-urnaname-big">${sel.nm}</div>
+            <div class="cand-urnaname-big">${sel.nm || ''}</div>
             <div class="cand-fullname">${sel.nmc || ''}</div>
             ${viceHtml}
           </div>
           <button class="btn-remove-selection" title="Remover escolha" id="btn-remove-${cargoKey}">✕</button>
         `;
+
+        const photoImg = previewEl.querySelector('.cand-photo');
+        if (photoImg) {
+          photoImg.onerror = () => { photoImg.src = FALLBACK_PHOTO; };
+        }
 
         document.getElementById(`btn-remove-${cargoKey}`)?.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -892,21 +908,29 @@ class App {
     }
 
     grid.innerHTML = '';
-    const fallbackSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="52" height="64" viewBox="0 0 52 64"><rect width="100%" height="100%" fill="%231e293b"/><circle cx="26" cy="24" r="14" fill="%2394a3b8"/><path d="M8,58 C8,40 44,40 44,58" fill="%2394a3b8"/></svg>`;
 
     candidates.forEach(cand => {
       const card = document.createElement('div');
       card.className = 'cand-explorer-card';
+      const photoSrc = cand.foto ? `fotos/${cand.foto}` : FALLBACK_PHOTO;
+      const candName = cand.nm || '';
+      const partyText = cand.sg ? `${cand.sg}${cand.fed ? ' • ' + cand.fed : ''}` : '';
+
       card.innerHTML = `
         <div class="cand-explorer-top">
-          <img class="cand-explorer-photo" src="fotos/${cand.foto}" onerror="this.src='${fallbackSvg}'" alt="${cand.nm}">
+          <img class="cand-explorer-photo" src="${photoSrc}">
           <div class="cand-explorer-info">
-            <div class="cand-explorer-name" title="${cand.nm}">${cand.nm}</div>
-            <div class="cand-explorer-party">${cand.sg} ${cand.fed ? '• ' + cand.fed : ''}</div>
+            <div class="cand-explorer-name" title="${candName}">${candName}</div>
+            <div class="cand-explorer-party">${partyText}</div>
           </div>
-          <div class="cand-explorer-num">${cand.nr}</div>
+          <div class="cand-explorer-num">${cand.nr || ''}</div>
         </div>
       `;
+
+      const img = card.querySelector('.cand-explorer-photo');
+      if (img) {
+        img.onerror = () => { img.src = FALLBACK_PHOTO; };
+      }
 
       card.addEventListener('click', () => {
         deviceEngine.haptic('confirm');
