@@ -13,6 +13,7 @@ export class UrnaSimulator {
     this.typedDigits = '';
     this.isVotoBranco = false;
     this.isFim = false;
+    this.fimAutoTransitionTimer = null;
 
     this.steps = [
       { key: 'deputadoFederal', cargo: 'DEPUTADO FEDERAL', digits: 4, order: 1 },
@@ -41,6 +42,7 @@ export class UrnaSimulator {
     this.screenActive = document.getElementById('urna-screen-active');
 
     this.setupKeypad();
+    this.setupFimActions();
   }
 
   setupKeypad() {
@@ -48,7 +50,7 @@ export class UrnaSimulator {
     if (!keypad) return;
 
     keypad.querySelectorAll('.key-num').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', () => {
         const num = btn.getAttribute('data-num');
         this.pressDigit(num);
       });
@@ -75,7 +77,24 @@ export class UrnaSimulator {
     });
   }
 
+  setupFimActions() {
+    document.getElementById('btn-urna-ver-panfleto')?.addEventListener('click', () => {
+      this.goToCompletionHub();
+    });
+
+    document.getElementById('btn-urna-download-direct')?.addEventListener('click', async () => {
+      await this.app.handleSavePhoto();
+      this.goToCompletionHub();
+    });
+
+    document.getElementById('btn-urna-votar-novamente')?.addEventListener('click', () => {
+      clearTimeout(this.fimAutoTransitionTimer);
+      this.open(true);
+    });
+  }
+
   open(useCola = true) {
+    clearTimeout(this.fimAutoTransitionTimer);
     this.modal.classList.add('open');
     this.currentStepIndex = 0;
     this.isFim = false;
@@ -95,6 +114,7 @@ export class UrnaSimulator {
   }
 
   close() {
+    clearTimeout(this.fimAutoTransitionTimer);
     this.modal.classList.remove('open');
   }
 
@@ -105,7 +125,7 @@ export class UrnaSimulator {
   loadStepWithCola() {
     const step = this.getCurrentStep();
     const sel = this.app.selections[step.key];
-    this.typedDigits = sel && sel.nr ? sel.nr : '';
+    this.typedDigits = sel && sel.nr && sel.nr !== '00' && sel.nr !== '99' ? sel.nr : '';
     this.isVotoBranco = sel && sel.tipo === 'branco';
     this.renderScreen();
   }
@@ -160,28 +180,80 @@ export class UrnaSimulator {
     if ('vibrate' in navigator) navigator.vibrate(40);
     urnaAudio.playKey();
 
+    // Store vote in application state
+    if (this.isVotoBranco) {
+      this.app.selections[step.key] = {
+        nr: '00',
+        nm: 'VOTO EM BRANCO',
+        sg: 'BRANCO',
+        foto: '',
+        tipo: 'branco'
+      };
+    } else {
+      const cand = this.findCandidate(step.key, this.typedDigits);
+      if (cand) {
+        this.app.selections[step.key] = cand;
+      } else {
+        this.app.selections[step.key] = {
+          nr: this.typedDigits || '99',
+          nm: 'VOTO NULO',
+          sg: 'NULO',
+          foto: '',
+          tipo: 'nulo'
+        };
+      }
+    }
+
+    this.app.saveSelections();
+    this.app.renderCard(step.key);
+
     // Advance to next step
     this.currentStepIndex++;
     if (this.currentStepIndex < this.steps.length) {
       this.loadStepWithCola();
     } else {
-      // Completed all votes! Show FIM!
+      // Completed all 6 votes! Show FIM & generate flyer!
       this.showFim();
     }
   }
 
-  showFim() {
+  async showFim() {
     this.isFim = true;
     this.screenActive.style.display = 'none';
     this.screenFim.style.display = 'flex';
     urnaAudio.playConfirmaFim();
     panfletometro.increment(1, true);
 
-    setTimeout(() => {
-      if (this.modal.classList.contains('open')) {
-        // Can offer to restart or close
+    // Synchronize app state, re-render all card previews and generate digital flyer
+    this.app.userHasEditedText = false;
+    this.app.renderAllCards();
+    this.app.updateProgressSummary();
+    await this.app.renderDigitalFlyerPreview();
+
+    clearTimeout(this.fimAutoTransitionTimer);
+    this.fimAutoTransitionTimer = setTimeout(() => {
+      if (this.modal && this.modal.classList.contains('open') && this.isFim) {
+        this.goToCompletionHub();
       }
-    }, 4000);
+    }, 3800);
+  }
+
+  goToCompletionHub() {
+    clearTimeout(this.fimAutoTransitionTimer);
+    this.close();
+    setTimeout(() => {
+      const hub = document.getElementById('flyer-completion-section');
+      if (hub) {
+        const offset = 70;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = hub.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        this.app.renderDigitalFlyerPreview();
+        this.app.showToast("🗳️ Votação concluída! Seu panfleto e texto de postagem foram gerados.", "success");
+      }
+    }, 250);
   }
 
   findCandidate(stepKey, number) {

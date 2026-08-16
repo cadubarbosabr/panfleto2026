@@ -703,12 +703,15 @@
             <div id="urna-screen-fim" class="urna-screen-fim" style="display: none;">
               <div class="urna-fim-text">FIM</div>
               <div class="urna-gravando-text">GRAVANDO</div>
-              <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
-                <button class="btn btn-primary" onclick="window.colaApp.urnaSimulator.open(true)">
-                  🔄 Votar Novamente
+              <div class="urna-fim-actions" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+                <button class="btn btn-primary" id="btn-urna-ver-panfleto" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);">
+                  <span>🚀 Ver Panfleto & Compartilhar</span>
                 </button>
-                <button class="btn btn-secondary" onclick="window.colaApp.urnaSimulator.close(); window.colaApp.openDigitalFlyerModal('stories');">
-                  📱 Ver Panfleto Pronto
+                <button class="btn btn-secondary" id="btn-urna-download-direct">
+                  <span>💾 Baixar Foto</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-urna-votar-novamente">
+                  <span>🔄 Votar Novamente</span>
                 </button>
               </div>
             </div>
