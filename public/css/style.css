@@ -1781,6 +1781,223 @@ body {
 }
 
 /* ==========================================================================
+   POST SOCIAL MODAL (X, INSTAGRAM, WHATSAPP <= 140 CHARACTERS)
+   ========================================================================== */
+
+.post-social-modal-card {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 620px;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  transform: scale(0.95) translateY(15px);
+  transition: transform var(--transition-smooth);
+}
+
+.modal-backdrop.open .post-social-modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.post-social-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.post-social-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.post-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.post-text-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.char-counter {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.char-counter.warning {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--accent-ruby);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+#social-post-textarea {
+  width: 100%;
+  background: #090d16;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+#social-post-textarea:focus {
+  border-color: var(--border-focus);
+}
+
+.social-networks-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.social-net-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.15rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.social-net-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.social-net-icon {
+  font-size: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.social-net-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.social-net-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.social-net-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.social-net-arrow {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  transition: transform var(--transition-fast);
+}
+
+.social-net-btn:hover .social-net-arrow {
+  transform: translateX(4px);
+  color: #ffffff;
+}
+
+/* X (Twitter) Styling */
+.btn-x-twitter {
+  background: #000000;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-x-twitter .social-net-icon {
+  background: #18181b;
+  color: #ffffff;
+  font-family: serif;
+  font-weight: bold;
+}
+
+.btn-x-twitter:hover {
+  border-color: #1d9bf0;
+  box-shadow: 0 4px 16px rgba(29, 155, 240, 0.25);
+}
+
+/* WhatsApp Styling */
+.btn-whatsapp-direct {
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.12) 0%, rgba(18, 140, 126, 0.15) 100%);
+  border-color: rgba(37, 211, 102, 0.35);
+}
+
+.btn-whatsapp-direct .social-net-icon {
+  background: #25D366;
+  color: #ffffff;
+}
+
+.btn-whatsapp-direct:hover {
+  border-color: #25D366;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+}
+
+/* Instagram Styling */
+.btn-instagram-direct {
+  background: linear-gradient(135deg, rgba(225, 48, 108, 0.12) 0%, rgba(131, 58, 180, 0.15) 100%);
+  border-color: rgba(225, 48, 108, 0.35);
+}
+
+.btn-instagram-direct .social-net-icon {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #ffffff;
+}
+
+.btn-instagram-direct:hover {
+  border-color: #e1306c;
+  box-shadow: 0 4px 16px rgba(225, 48, 108, 0.3);
+}
+
+.post-social-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* ==========================================================================
    PRINTABLE COLA ELEITORAL (MODERN DIGITAL COLOR PRINT)
    ========================================================================== */
 

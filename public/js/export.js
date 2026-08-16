@@ -2,6 +2,163 @@
 // EXPORT & SHARE MODULE - MODERN DIGITAL FLYER & SOCIAL MEDIA
 // ==========================================================================
 
+// Official known handles dictionary for Brazilian political figures
+export const CANDIDATE_HANDLES = {
+  // Presidentes
+  'LULA': { x: '@LulaOficial', ig: '@lulaoficial' },
+  'RENAN SANTOS': { x: '@RenanSantosMBL', ig: '@renansantosmbl' },
+  'CIRO GOMES': { x: '@cirogomes', ig: '@cirogomes' },
+  'SIMONE TEBET': { x: '@simonetebetbr', ig: '@simonetebetbr' },
+  'LEO PERICLES': { x: '@LeoPericlesUP', ig: '@leopericlesup' },
+  'LÉO PÉRICLES': { x: '@LeoPericlesUP', ig: '@leopericlesup' },
+  'SOFIA MANZANO': { x: '@ManzanoSofia', ig: '@sofiamanzanopcb' },
+  'VERA': { x: '@verapstu', ig: '@verapstu' },
+  'VERA LÚCIA': { x: '@verapstu', ig: '@verapstu' },
+  'EYMAEL': { x: '@eymaeloficial', ig: '@eymaeloficial' },
+  'FELIPE D AVILA': { x: '@lfdavilaoficial', ig: '@luizfelipegd' },
+  'HERTZ DIAS': { x: '@HertzDiasPSTU', ig: '@hertzdias' },
+
+  // Governadores e Líderes Estaduais
+  'TARCISIO': { x: '@tarcisiogdf', ig: '@tarcisiogdf' },
+  'TARCÍSIO': { x: '@tarcisiogdf', ig: '@tarcisiogdf' },
+  'TARCÍSIO DE FREITAS': { x: '@tarcisiogdf', ig: '@tarcisiogdf' },
+  'FERNANDO HADDAD': { x: '@Haddad_Fernando', ig: '@fernandohaddadoficial' },
+  'HADDAD': { x: '@Haddad_Fernando', ig: '@fernandohaddadoficial' },
+  'ROMEU ZEMA': { x: '@RomeuZema', ig: '@romeuzemaoficial' },
+  'ZEMA': { x: '@RomeuZema', ig: '@romeuzemaoficial' },
+  'EDUARDO LEITE': { x: '@EduardoLeite_', ig: '@eduardoleite45' },
+  'RATINHO JUNIOR': { x: '@ratinho_jr', ig: '@ratinho_junior' },
+  'CLAUDIO CASTRO': { x: '@claudiocastroRJ', ig: '@claudiocastrorj' },
+  'RODRIGO GARCIA': { x: '@rodrigogarcia_', ig: '@rodrigogarciaoficial' },
+  'MARCIO FRANCA': { x: '@marciofrancasp', ig: '@marciofrancasp' },
+  'MÁRCIO FRANÇA': { x: '@marciofrancasp', ig: '@marciofrancasp' },
+  'HELDER BARBALHO': { x: '@helderbarbalho', ig: '@helderbarbalho' },
+  'RAQUEL LYRA': { x: '@raquellyra', ig: '@raquellyraoficial' },
+  'JERÔNIMO RODRIGUES': { x: '@jeronimoba13', ig: '@jeronimorodriguesba' },
+  'ACM NETO': { x: '@acmneto_', ig: '@acmnetooficial' },
+
+  // Senadores e Deputados
+  'MARCOS PONTES': { x: '@Astro_Pontes', ig: '@astropontes' },
+  'ASTRONAUTA MARCOS PONTES': { x: '@Astro_Pontes', ig: '@astropontes' },
+  'SERGIO MORO': { x: '@SF_Moro', ig: '@sf_moro' },
+  'MORO': { x: '@SF_Moro', ig: '@sf_moro' },
+  'ROMARIO': { x: '@RomarioOnze', ig: '@romariofaria' },
+  'ROMÁRIO': { x: '@RomarioOnze', ig: '@romariofaria' },
+  'CLEITINHO': { x: '@cleitinhotmj', ig: '@cleitinhotmj' },
+  'MARCOS DO VAL': { x: '@marcosdoval', ig: '@marcosdoval' },
+  'FLAVIO BOLSONARO': { x: '@FlavioBolsonaro', ig: '@flaviobolsonaro' },
+  'FLÁVIO BOLSONARO': { x: '@FlavioBolsonaro', ig: '@flaviobolsonaro' },
+  'RANDOLFE RODRIGUES': { x: '@randolfeap', ig: '@randolferodrigues' },
+  'TEREZA CRISTINA': { x: '@TerezaCrisMS', ig: '@terezacristinams' },
+  'HAMILTON MOURAO': { x: '@GeneralMourao', ig: '@generalmourao' },
+  'GENERAL MOURÃO': { x: '@GeneralMourao', ig: '@generalmourao' },
+  'NIKOLAS FERREIRA': { x: '@nikolas_dm', ig: '@nikolasferreiradm' },
+  'GUILHERME BOULOS': { x: '@GuilhermeBoulos', ig: '@guilhermeboulos.oficial' },
+  'BOULOS': { x: '@GuilhermeBoulos', ig: '@guilhermeboulos.oficial' },
+  'TABATA AMARAL': { x: '@tabataamaralsp', ig: '@tabataamaralsp' },
+  'KIM KATAGUIRI': { x: '@KimKataguiri', ig: '@kimkataguiri' },
+  'CARLA ZAMBELLI': { x: '@Zambelli2210', ig: '@carlazambelli' },
+  'EDUARDO BOLSONARO': { x: '@BolsonaroSP', ig: '@bolsonarosp' },
+  'MARINA SILVA': { x: '@MarinaSilva', ig: '@marinasilvaoficial' },
+  'ANDRE JANONES': { x: '@AndreJanonesAdv', ig: '@andrejanones' },
+  'RICARDO SALLES': { x: '@rsallesmma', ig: '@ricardosalles' }
+};
+
+/**
+ * Resolves candidate social handle or falls back to candidate name
+ */
+export function getCandidateHandle(cand, network = 'x') {
+  if (!cand) return '';
+  if (cand.handle) return cand.handle;
+
+  const key = cand.nm ? cand.nm.toUpperCase().trim() : '';
+  const keyFull = cand.nmc ? cand.nmc.toUpperCase().trim() : '';
+
+  if (CANDIDATE_HANDLES[key]) {
+    return CANDIDATE_HANDLES[key][network] || CANDIDATE_HANDLES[key].x || cand.nm;
+  }
+  if (CANDIDATE_HANDLES[keyFull]) {
+    return CANDIDATE_HANDLES[keyFull][network] || CANDIDATE_HANDLES[keyFull].x || cand.nm;
+  }
+
+  // Fallback: repeats candidate official name as requested
+  return cand.nm || cand.nmc || '';
+}
+
+/**
+ * Suggests an engaging, structured post text strictly <= 140 characters
+ */
+export function generateSocialPostText(stateUf, selections, network = 'x') {
+  const items = [];
+
+  const addCand = (label, sel) => {
+    if (!sel || !sel.nr) return;
+    const handle = getCandidateHandle(sel, network);
+    if (sel.tipo === 'branco') {
+      items.push(`${label}: Branco`);
+    } else if (sel.tipo === 'nulo') {
+      items.push(`${label}: Nulo`);
+    } else {
+      items.push(`${label} ${handle} ${sel.nr}`);
+    }
+  };
+
+  addCand('Pres', selections.presidente);
+  addCand('Gov', selections.governador);
+  addCand('Sen', selections.senador1);
+  addCand('Sen2', selections.senador2);
+  addCand('DepFed', selections.deputadoFederal);
+  addCand(stateUf === 'DF' ? 'DepDist' : 'DepEst', selections.deputadoEstadual);
+
+  // If no candidates selected yet
+  if (items.length === 0) {
+    return `🗳️ Minha Cola 2026 (${stateUf}): monte seu panfleto oficial no app! #Eleicoes2026`;
+  }
+
+  const prefix = `🗳️ Cola 2026 ${stateUf}: `;
+  const tag = ' #Eleicoes2026';
+
+  // Build candidate string joining with " | "
+  let candidateStr = items.join(' | ');
+  let fullText = `${prefix}${candidateStr}${tag}`;
+
+  // If within 140 chars, return immediately
+  if (fullText.length <= 140) {
+    return fullText;
+  }
+
+  // Compact fallback if length exceeds 140 chars:
+  // Step 1: remove space around pipes
+  candidateStr = items.join('|');
+  fullText = `${prefix}${candidateStr}${tag}`;
+  if (fullText.length <= 140) {
+    return fullText;
+  }
+
+  // Step 2: Prioritize top positions (Pres, Gov, Sen, Dep) and truncate to fit exactly <= 140
+  while (items.length > 2 && `${prefix}${items.join('|')}${tag}`.length > 140) {
+    items.pop(); // Remove least prominent position from text
+  }
+
+  fullText = `${prefix}${items.join('|')}${tag}`;
+  if (fullText.length > 140) {
+    fullText = fullText.substring(0, 137) + '...';
+  }
+
+  return fullText;
+}
+
+/**
+ * Builds direct sharing URLs
+ */
+export function getXPostUrl(text) {
+  return `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+}
+
+export function getWhatsAppShareUrl(text) {
+  return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+}
+
 export function formatWhatsAppMessage(stateName, stateUf, selections) {
   const dateStr = "04 de Outubro de 2026";
   let text = `🗳️ *MINHA COLA ELEITORAL 2026* 🇧🇷\n`;
@@ -28,7 +185,9 @@ export function formatWhatsAppMessage(stateName, stateUf, selections) {
     } else if (sel.tipo === 'nulo') {
       text += `❌ *VOTO NULO*\n\n`;
     } else {
-      text += `👉 *Nº ${sel.nr}* - ${sel.nm} (${sel.sg})\n`;
+      const handle = getCandidateHandle(sel, 'x');
+      const handleDisplay = handle.startsWith('@') ? ` (${handle})` : '';
+      text += `👉 *Nº ${sel.nr}* - ${sel.nm}${handleDisplay} • ${sel.sg}\n`;
       if (sel.vices && sel.vices.length > 0) {
         text += `   _Vice: ${sel.vices[0].nm}_\n`;
       }
@@ -37,7 +196,7 @@ export function formatWhatsAppMessage(stateName, stateUf, selections) {
   }
 
   text += `───────────────────────\n`;
-  text += `📱 _Monte sua cola eleitoral oficial para 2026!_\n`;
+  text += `📱 _Monte seu panfleto digital para 2026!_\n`;
   text += `⚠️ _Lembrete: Leve sua cola anotada ou impressa para a cabine de votação._`;
 
   return text;
@@ -245,11 +404,13 @@ export async function generateCanvasFlyer(stateName, stateUf, selections, format
           textStartX = 330;
         }
 
-        // Candidate Name
+        // Candidate Name + Social Handle
         ctx.textAlign = 'left';
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 32px system-ui, sans-serif';
-        const nameDisplay = sel.nm.length > 26 ? sel.nm.substring(0, 24) + '...' : sel.nm;
+        const handle = getCandidateHandle(sel, 'x');
+        const handleText = handle.startsWith('@') ? ` (${handle})` : '';
+        const nameDisplay = (sel.nm + handleText).length > 26 ? (sel.nm + handleText).substring(0, 24) + '...' : (sel.nm + handleText);
         ctx.fillText(nameDisplay, textStartX, y + 125);
 
         // Party & Federation
@@ -280,11 +441,11 @@ export async function generateCanvasFlyer(stateName, stateUf, selections, format
     ctx.fillStyle = '#e2e8f0';
     ctx.font = 'bold 22px system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('📱 Salve esta imagem no celular ou compartilhe com amigos!', 540, 1805);
+    ctx.fillText('📱 Salve esta imagem no celular ou compartilhe nas redes sociais!', 540, 1805);
 
     ctx.fillStyle = '#94a3b8';
     ctx.font = '19px system-ui, sans-serif';
-    ctx.fillText('Cola Oficial do Eleitor • Eleições 2026', 540, 1840);
+    ctx.fillText('Panfleto Oficial do Eleitor • Eleições 2026', 540, 1840);
   }
 
   // --- RENDER 2-COLUMN GRID (FOR FEED 4:5 OR SQUARE 1:1) ---
@@ -385,7 +546,7 @@ export async function generateCanvasFlyer(stateName, stateUf, selections, format
     ctx.fillStyle = '#94a3b8';
     ctx.font = '18px system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Cola Oficial do Eleitor • Eleições 2026', canvas.width / 2, canvas.height - 50);
+    ctx.fillText('Panfleto Oficial do Eleitor • Eleições 2026', canvas.width / 2, canvas.height - 50);
   }
 
   return canvas;
@@ -457,7 +618,7 @@ export async function shareFlyerOnSocial(stateName, stateUf, selections, format 
           await navigator.share({
             files: [file],
             title: `Minha Cola Eleitoral 2026 (${stateUf})`,
-            text: `Confira minha cola eleitoral para as Eleições 2026 em ${stateName} (${stateUf})!`
+            text: generateSocialPostText(stateUf, selections, 'x')
           });
           resolve(true);
           return;
@@ -468,7 +629,7 @@ export async function shareFlyerOnSocial(stateName, stateUf, selections, format 
         }
       }
 
-      // If Web Share is not available, download the image and copy text
+      // Fallback: download the image
       saveFlyerToGallery(stateName, stateUf, selections, format);
       resolve(true);
     }, 'image/png');

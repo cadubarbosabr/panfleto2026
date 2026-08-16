@@ -9,7 +9,10 @@ import {
   generateCanvasFlyer, 
   saveFlyerToGallery, 
   copyFlyerImageToClipboard, 
-  shareFlyerOnSocial 
+  shareFlyerOnSocial,
+  generateSocialPostText,
+  getXPostUrl,
+  getWhatsAppShareUrl
 } from './export.js';
 
 const STATE_REGIONS = {
@@ -234,6 +237,46 @@ class App {
   }
 
   // ==========================================================================
+  // POSTAR PANFLETO NAS REDES SOCIAIS (X, INSTAGRAM, WHATSAPP <= 140 CHARACTERS)
+  // ==========================================================================
+  openPostSocialModal() {
+    if ('vibrate' in navigator) navigator.vibrate(35);
+    const modal = document.getElementById('modal-post-social');
+    const textarea = document.getElementById('social-post-textarea');
+    const counter = document.getElementById('post-char-counter');
+    const linkX = document.getElementById('btn-share-x');
+    const linkWA = document.getElementById('btn-share-wa-direct');
+
+    if (!modal || !textarea) return;
+
+    // Generate smart text <= 140 chars with handles
+    const initialText = generateSocialPostText(this.currentUf, this.selections, 'x');
+    textarea.value = initialText;
+
+    const updateSocialLinks = (text) => {
+      const len = text.length;
+      if (counter) {
+        counter.textContent = `${len} / 140 caracteres`;
+        counter.classList.toggle('warning', len > 140);
+      }
+      if (linkX) linkX.href = getXPostUrl(text);
+      if (linkWA) linkWA.href = getWhatsAppShareUrl(text);
+    };
+
+    updateSocialLinks(initialText);
+
+    // Live typing listener
+    textarea.oninput = () => updateSocialLinks(textarea.value);
+
+    modal.classList.add('open');
+  }
+
+  closePostSocialModal() {
+    const modal = document.getElementById('modal-post-social');
+    if (modal) modal.classList.remove('open');
+  }
+
+  // ==========================================================================
   // DIGITAL FLYER / IMPRESSÃO DIGITAL MODAL (SOCIAL MEDIA & HD CANVAS)
   // ==========================================================================
   async openDigitalFlyerModal(format = 'stories') {
@@ -245,7 +288,6 @@ class App {
 
     modal.classList.add('open');
 
-    // Update tab active state
     const tabs = document.getElementById('flyer-format-tabs');
     if (tabs) {
       tabs.querySelectorAll('.flyer-tab-btn').forEach(btn => {
@@ -682,7 +724,7 @@ class App {
   // Handle direct image download
   async handleSavePhoto() {
     if ('vibrate' in navigator) navigator.vibrate(40);
-    this.showToast("📸 Gerando imagem da cola em alta resolução...", "info");
+    this.showToast("📸 Gerando imagem do panfleto em alta resolução...", "info");
 
     try {
       const stateObj = this.states.find(s => s.uf === this.currentUf);
@@ -692,14 +734,48 @@ class App {
       this.showToast("✅ Imagem salva com sucesso na pasta de downloads / fotos!", "success");
     } catch (err) {
       console.error("Erro ao salvar foto:", err);
-      this.showToast("Erro ao gerar foto da cola.", "warn");
+      this.showToast("Erro ao gerar foto do panfleto.", "warn");
     }
   }
 
   setupEventListeners() {
     document.getElementById('btn-toggle-theme')?.addEventListener('click', () => this.toggleTheme());
 
-    // Open Digital Flyer Modal Buttons (Header, Bottom toolbar, Mobile bottom nav)
+    // Post Social Modal Buttons (Header, Bottom toolbar, Mobile bottom nav)
+    document.getElementById('btn-open-postar')?.addEventListener('click', () => this.openPostSocialModal());
+    document.getElementById('btn-open-postar-bottom')?.addEventListener('click', () => this.openPostSocialModal());
+    document.getElementById('btn-mobile-postar')?.addEventListener('click', () => this.openPostSocialModal());
+
+    // Close Post Social Modal
+    document.getElementById('btn-close-post-social')?.addEventListener('click', () => this.closePostSocialModal());
+    document.getElementById('modal-post-social')?.addEventListener('click', (e) => {
+      if (e.target.id === 'modal-post-social') this.closePostSocialModal();
+    });
+
+    // Copy formatted <=140 text
+    document.getElementById('btn-copy-post-text')?.addEventListener('click', () => {
+      const text = document.getElementById('social-post-textarea')?.value || '';
+      copyToClipboard(text).then(() => {
+        this.showToast("📋 Texto copiado com sucesso (<=140 caracteres)!", "success");
+      });
+    });
+
+    // Instagram share action from Post Modal
+    document.getElementById('btn-share-ig-direct')?.addEventListener('click', async () => {
+      if ('vibrate' in navigator) navigator.vibrate(35);
+      const text = document.getElementById('social-post-textarea')?.value || '';
+      await copyToClipboard(text);
+      this.showToast("📋 Legenda copiada! Baixando panfleto para o Instagram...", "info");
+      await this.handleSavePhoto();
+      setTimeout(() => {
+        window.open('https://www.instagram.com/', '_blank');
+      }, 1000);
+    });
+
+    // Download flyer directly from Post Modal
+    document.getElementById('btn-download-flyer-from-post')?.addEventListener('click', () => this.handleSavePhoto());
+
+    // Open Digital Flyer Modal Buttons
     document.getElementById('btn-open-flyer')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
     document.getElementById('btn-open-flyer-bottom')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
     document.getElementById('btn-mobile-flyer')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
@@ -755,7 +831,6 @@ class App {
     // Direct Save Photo Button
     document.getElementById('btn-save-photo')?.addEventListener('click', () => this.handleSavePhoto());
     document.getElementById('btn-save-photo-bottom')?.addEventListener('click', () => this.handleSavePhoto());
-    document.getElementById('btn-mobile-save')?.addEventListener('click', () => this.handleSavePhoto());
 
     // Mobile Bottom Bar Actions
     document.getElementById('btn-mobile-urna')?.addEventListener('click', () => {
@@ -810,26 +885,6 @@ class App {
     });
 
     document.getElementById('btn-clear-all')?.addEventListener('click', () => this.clearAllSelections());
-
-    document.getElementById('btn-share-whatsapp')?.addEventListener('click', () => {
-      const stateObj = this.states.find(s => s.uf === this.currentUf);
-      const text = formatWhatsAppMessage(stateObj ? stateObj.nome : this.currentUf, this.currentUf, this.selections);
-      copyToClipboard(text).then(() => {
-        this.showToast("Texto copiado! Pronto para colar no WhatsApp.", "success");
-      }).catch(() => {
-        this.showToast("Erro ao copiar para a área de transferência.", "warn");
-      });
-    });
-
-    document.getElementById('btn-share-whatsapp-bottom')?.addEventListener('click', () => {
-      const stateObj = this.states.find(s => s.uf === this.currentUf);
-      const text = formatWhatsAppMessage(stateObj ? stateObj.nome : this.currentUf, this.currentUf, this.selections);
-      copyToClipboard(text).then(() => {
-        this.showToast("Texto copiado! Pronto para colar no WhatsApp.", "success");
-      }).catch(() => {
-        this.showToast("Erro ao copiar para a área de transferência.", "warn");
-      });
-    });
   }
 
   async preparePrintLayout() {

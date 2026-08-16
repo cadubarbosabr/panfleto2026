@@ -36,14 +36,14 @@
       </div>
 
       <div class="header-actions">
-        <button class="btn btn-primary" id="btn-open-flyer" title="Gerar e Compartilhar Panfleto Digital nas Redes">
-          <span>📱</span>
-          <span>Panfleto Digital</span>
+        <button class="btn btn-primary" id="btn-open-postar" title="Postar Panfleto no X, Instagram e WhatsApp" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); border-color: #10b981;">
+          <span>📢</span>
+          <span>Postar Panfleto</span>
         </button>
 
-        <button class="btn btn-secondary" id="btn-save-photo" title="Baixar Imagem HD para Galeria / Downloads">
-          <span>💾</span>
-          <span>Baixar Imagem</span>
+        <button class="btn btn-secondary" id="btn-open-flyer" title="Gerar e Visualizar Panfleto Digital nas Redes">
+          <span>📱</span>
+          <span>Panfleto Digital</span>
         </button>
 
         <button class="btn btn-urna" id="btn-open-urna" title="Abrir Simulador de Urna">
@@ -51,9 +51,9 @@
           <span>Urna</span>
         </button>
 
-        <button class="btn btn-secondary" id="btn-share-whatsapp" title="Copiar Texto para WhatsApp">
-          <span>📋</span>
-          <span>WhatsApp</span>
+        <button class="btn btn-secondary" id="btn-save-photo" title="Baixar Imagem HD para Galeria / Downloads">
+          <span>💾</span>
+          <span>Baixar</span>
         </button>
 
         <button class="btn btn-icon-only" id="btn-toggle-theme" title="Alternar Modo Claro / Escuro">
@@ -397,19 +397,19 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0; flex-wrap: wrap; gap: 1rem;">
       <span id="progress-counter" style="font-weight: 700; color: var(--accent-emerald);">0 de 6 votos definidos</span>
       <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-        <button class="btn btn-primary" id="btn-open-flyer-bottom">
+        <button class="btn btn-primary" id="btn-open-postar-bottom" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); border-color: #10b981;">
+          <span>📢</span>
+          <span>Postar Panfleto (X, Insta, WhatsApp)</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-open-flyer-bottom">
           <span>📱</span>
-          <span>Panfleto Digital (Redes Sociais)</span>
+          <span>Panfleto Digital</span>
         </button>
 
         <button class="btn btn-secondary" id="btn-save-photo-bottom">
           <span>💾</span>
           <span>Baixar Foto (PNG)</span>
-        </button>
-
-        <button class="btn btn-secondary" id="btn-share-whatsapp-bottom">
-          <span>📋</span>
-          <span>WhatsApp</span>
         </button>
 
         <button class="btn" id="btn-clear-all" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
@@ -685,18 +685,86 @@
     </div>
   </footer>
 
+  <!-- ==========================================================================
+       MODAL: POSTAR PANFLETO NAS REDES SOCIAIS (X, INSTAGRAM, WHATSAPP)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="modal-post-social">
+    <div class="post-social-modal-card">
+      <div class="post-social-header">
+        <div class="modal-title-group">
+          <h3>📢 Postar Panfleto nas Redes Sociais</h3>
+          <p>Compartilhe sua cola com o handle dos candidatos em até 140 caracteres</p>
+        </div>
+        <button class="btn-close-modal" id="btn-close-post-social" title="Fechar">✕</button>
+      </div>
+
+      <div class="post-social-body">
+        <div class="post-text-wrapper">
+          <label class="post-text-label" for="social-post-textarea">
+            <span>Texto formatado para o post (com @handles):</span>
+            <span class="char-counter" id="post-char-counter">0 / 140 caracteres</span>
+          </label>
+          <textarea id="social-post-textarea" rows="3" maxlength="140" placeholder="Gerando texto com handles dos candidatos..."></textarea>
+        </div>
+
+        <div class="social-networks-grid">
+          <!-- X (Twitter) -->
+          <a class="social-net-btn btn-x-twitter" id="btn-share-x" target="_blank" rel="noopener noreferrer">
+            <div class="social-net-icon">𝕏</div>
+            <div class="social-net-info">
+              <span class="social-net-title">Postar no X (Twitter)</span>
+              <span class="social-net-desc">Abre o tweet pronto com @handles oficiais e números</span>
+            </div>
+            <span class="social-net-arrow">➔</span>
+          </a>
+
+          <!-- WhatsApp -->
+          <a class="social-net-btn btn-whatsapp-direct" id="btn-share-wa-direct" target="_blank" rel="noopener noreferrer">
+            <div class="social-net-icon">💬</div>
+            <div class="social-net-info">
+              <span class="social-net-title">Compartilhar no WhatsApp</span>
+              <span class="social-net-desc">Enviar para amigos, grupos ou postar no Status</span>
+            </div>
+            <span class="social-net-arrow">➔</span>
+          </a>
+
+          <!-- Instagram -->
+          <button class="social-net-btn btn-instagram-direct" id="btn-share-ig-direct">
+            <div class="social-net-icon">📸</div>
+            <div class="social-net-info">
+              <span class="social-net-title">Postar no Instagram / Stories</span>
+              <span class="social-net-desc">Copia legenda e baixa o panfleto visual em HD</span>
+            </div>
+            <span class="social-net-arrow">➔</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post-social-footer">
+        <button class="btn btn-secondary" id="btn-copy-post-text">
+          <span>📋</span>
+          <span>Copiar Texto (140 chars)</span>
+        </button>
+        <button class="btn btn-primary" id="btn-download-flyer-from-post">
+          <span>💾</span>
+          <span>Baixar Panfleto PNG</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Dedicated Screenshot & Flyer Capture Area -->
   <div id="panfleto-capture-container"></div>
 
   <!-- Mobile Bottom Floating Action Bar (100% Mobile Friendly) -->
   <nav class="mobile-bottom-bar" id="mobile-bottom-nav">
-    <button class="btn-mobile-action btn-save-mobile" id="btn-mobile-flyer">
+    <button class="btn-mobile-action btn-save-mobile" id="btn-mobile-postar">
+      <span>📢</span>
+      <span>Postar</span>
+    </button>
+    <button class="btn-mobile-action" id="btn-mobile-flyer">
       <span>📱</span>
       <span>Panfleto</span>
-    </button>
-    <button class="btn-mobile-action" id="btn-mobile-save">
-      <span>💾</span>
-      <span>Baixar</span>
     </button>
     <button class="btn-mobile-action" id="btn-mobile-urna">
       <span>🗳️</span>
