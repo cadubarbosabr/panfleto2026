@@ -731,25 +731,38 @@ export async function shareFlyerOnSocial(stateName, stateUf, selections, format 
 
       const fileName = `panfleto_eleitoral_2026_${stateUf}.png`;
       const file = new File([blob], fileName, { type: 'image/png' });
+      const text = generateSocialPostText(stateUf, selections);
 
+      // Attempt native Web Share API with photo file
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
             files: [file],
-            title: `Minha Cola Eleitoral 2026 (${stateUf})`,
-            text: generateSocialPostText(stateUf, selections, 'x')
+            title: `Cola Eleitoral 2026 (${stateUf})`,
+            text: text
           });
           resolve(true);
           return;
         } catch (err) {
-          if (err.name !== 'AbortError') {
-            console.log('Share error:', err);
+          if (err.name === 'AbortError') {
+            resolve(false);
+            return;
           }
+          console.log('Share error fallback:', err);
         }
       }
 
-      // Fallback: download the image
-      saveFlyerToGallery(stateName, stateUf, selections, format);
+      // Fallback: copy image to clipboard if supported
+      try {
+        if (navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+        }
+      } catch (e) {}
+
+      // Open in new tab and download
+      await saveFlyerToGallery(stateName, stateUf, selections, format);
       resolve(true);
     }, 'image/png');
   });

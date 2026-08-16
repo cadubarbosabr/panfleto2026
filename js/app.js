@@ -1054,16 +1054,44 @@ class App {
       });
     });
 
+    // WhatsApp share action from Post Modal (Attaches photo via Web Share or copies image)
+    document.getElementById('btn-share-wa-direct')?.addEventListener('click', async (e) => {
+      const stateObj = this.states.find(s => s.uf === this.currentUf);
+      const stateName = stateObj ? stateObj.nome : this.currentUf;
+
+      if (navigator.share && navigator.canShare) {
+        e.preventDefault();
+        deviceEngine.haptic('confirm');
+        this.showToast("📲 Abrindo compartilhamento com foto no WhatsApp...", "info");
+        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, 'stories');
+      } else {
+        // Desktop WhatsApp Web fallback
+        deviceEngine.haptic('selection');
+        try {
+          await copyFlyerImageToClipboard(stateName, this.currentUf, this.selections, 'stories');
+          this.showToast("📋 Imagem do panfleto copiada! Cole (Ctrl+V) no WhatsApp.", "success");
+        } catch (err) {}
+      }
+    });
+
     // Instagram share action from Post Modal
-    document.getElementById('btn-share-ig-direct')?.addEventListener('click', async () => {
+    document.getElementById('btn-share-ig-direct')?.addEventListener('click', async (e) => {
       deviceEngine.haptic('confirm');
-      const text = document.getElementById('social-post-textarea')?.value || '';
-      await copyToClipboard(text);
-      this.showToast("📋 Legenda copiada! Baixando panfleto para o Instagram...", "info");
-      await this.handleSavePhoto();
-      setTimeout(() => {
-        window.open('https://www.instagram.com/', '_blank');
-      }, 1000);
+      const stateObj = this.states.find(s => s.uf === this.currentUf);
+      const stateName = stateObj ? stateObj.nome : this.currentUf;
+
+      if (navigator.share && navigator.canShare) {
+        this.showToast("📸 Compartilhando foto no Instagram...", "info");
+        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, 'stories');
+      } else {
+        const text = document.getElementById('social-post-textarea')?.value || '';
+        await copyToClipboard(text);
+        this.showToast("📋 Legenda copiada! Abrindo foto e Instagram...", "info");
+        await this.handleSavePhoto();
+        setTimeout(() => {
+          window.open('https://www.instagram.com/', '_blank');
+        }, 800);
+      }
     });
 
     // Download flyer directly from Post Modal
