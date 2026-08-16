@@ -18,15 +18,12 @@ export class Panfletometro {
   }
 
   calculateBaseCount() {
-    // Organic formula based on calendar progression toward Oct 2026
-    const baseAnchor = 34500;
-    const now = Date.now();
-    const anchorDate = new Date('2026-01-01T00:00:00Z').getTime();
-    const hoursElapsed = Math.max(1, (now - anchorDate) / (1000 * 60 * 60));
+    // Realistic organic base starting at ~140 + day progression + visits + local created
+    const baseAnchor = 142;
     
-    // Day cycle factor (higher during day, lower at night)
+    // Day progression factor
     const hourOfDay = new Date().getHours();
-    const timeFactor = Math.sin((hourOfDay / 24) * Math.PI) * 1.5 + 1;
+    const timeFactor = Math.floor(hourOfDay * 1.8);
 
     // Track user local visits
     let visits = parseInt(localStorage.getItem(this.storageKeyVisits) || '0', 10);
@@ -36,7 +33,7 @@ export class Panfletometro {
     // Track user creations
     const created = parseInt(localStorage.getItem(this.storageKeyCreated) || '0', 10);
 
-    const calculated = Math.floor(baseAnchor + (hoursElapsed * 2.8 * timeFactor) + (visits * 3) + (created * 7));
+    const calculated = baseAnchor + timeFactor + (visits * 2) + (created * 1);
     return calculated;
   }
 
