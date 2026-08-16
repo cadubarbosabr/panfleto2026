@@ -83,7 +83,7 @@ panfleto2026/
   Dep | TABATA | 4000
   Est | CARLOS | 50123
 
-  👉 https://panfletos2026.vercel.app
+  👉 https://panfleto2026.vercel.app
   ```
 
 ### 🗳️ `js/urna.js` — Simulador da Urna Eletrônica
