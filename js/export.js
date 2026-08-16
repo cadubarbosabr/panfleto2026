@@ -99,7 +99,7 @@ export function generateSocialPostText(stateUf, selections, network = 'x') {
     } else if (sel.tipo === 'nulo') {
       items.push(`${label}: Nulo`);
     } else {
-      items.push(`${label} ${handle} ${sel.nr}`);
+      items.push(`${label}: ${handle} (${sel.nr})`);
     }
   };
 
@@ -107,40 +107,47 @@ export function generateSocialPostText(stateUf, selections, network = 'x') {
   addCand('Gov', selections.governador);
   addCand('Sen', selections.senador1);
   addCand('Sen2', selections.senador2);
-  addCand('DepFed', selections.deputadoFederal);
-  addCand(stateUf === 'DF' ? 'DepDist' : 'DepEst', selections.deputadoEstadual);
+  addCand('Dep', selections.deputadoFederal);
+  addCand(stateUf === 'DF' ? 'Dist' : 'Est', selections.deputadoEstadual);
 
   // If no candidates selected yet
   if (items.length === 0) {
     return `🗳️ Minha Cola 2026 (${stateUf}): monte seu panfleto oficial no app! #Eleicoes2026`;
   }
 
-  const prefix = `🗳️ Cola 2026 ${stateUf}: `;
+  const prefix = `🗳️ Cola 2026 (${stateUf}): `;
   const tag = ' #Eleicoes2026';
 
-  // Build candidate string joining with " | "
-  let candidateStr = items.join(' | ');
+  // Format 1: Separated by " • "
+  let candidateStr = items.join(' • ');
   let fullText = `${prefix}${candidateStr}${tag}`;
-
-  // If within 140 chars, return immediately
   if (fullText.length <= 140) {
     return fullText;
   }
 
-  // Compact fallback if length exceeds 140 chars:
-  // Step 1: remove space around pipes
+  // Format 2: Separated by " | "
+  candidateStr = items.join(' | ');
+  fullText = `${prefix}${candidateStr}${tag}`;
+  if (fullText.length <= 140) {
+    return fullText;
+  }
+
+  // Format 3: Compact pipe without spaces
   candidateStr = items.join('|');
   fullText = `${prefix}${candidateStr}${tag}`;
   if (fullText.length <= 140) {
     return fullText;
   }
 
-  // Step 2: Prioritize top positions (Pres, Gov, Sen, Dep) and truncate to fit exactly <= 140
-  while (items.length > 2 && `${prefix}${items.join('|')}${tag}`.length > 140) {
-    items.pop(); // Remove least prominent position from text
+  // Format 4: Prioritize major positions (Pres, Gov, Sen, Dep) to fit strictly <= 140 chars
+  while (items.length > 2 && `${prefix}${items.join(' | ')}${tag}`.length > 140) {
+    items.pop();
   }
 
-  fullText = `${prefix}${items.join('|')}${tag}`;
+  fullText = `${prefix}${items.join(' | ')}${tag}`;
+  if (fullText.length > 140) {
+    fullText = `${prefix}${items.join('|')}${tag}`;
+  }
   if (fullText.length > 140) {
     fullText = fullText.substring(0, 137) + '...';
   }
@@ -163,40 +170,40 @@ export function formatWhatsAppMessage(stateName, stateUf, selections) {
   const dateStr = "04 de Outubro de 2026";
   let text = `🗳️ *MINHA COLA ELEITORAL 2026* 🇧🇷\n`;
   text += `📍 *Estado:* ${stateName} (${stateUf})\n`;
-  text += `📅 *Eleições Gerais:* ${dateStr}\n`;
-  text += `───────────────────────\n\n`;
+  text += `📅 *Eleições:* ${dateStr}\n`;
+  text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
 
   const cargos = [
-    { key: 'deputadoFederal', label: '1️⃣ Deputado Federal (4 dígitos)' },
-    { key: 'deputadoEstadual', label: stateUf === 'DF' ? '2️⃣ Deputado Distrital (5 dígitos)' : '2️⃣ Deputado Estadual (5 dígitos)' },
-    { key: 'senador1', label: '3️⃣ Senador - 1ª Vaga (3 dígitos)' },
-    { key: 'senador2', label: '4️⃣ Senador - 2ª Vaga (3 dígitos)' },
-    { key: 'governador', label: '5️⃣ Governador (2 dígitos)' },
-    { key: 'presidente', label: '6️⃣ Presidente da República (2 dígitos)' }
+    { key: 'deputadoFederal', label: '1️⃣ *Deputado Federal:*' },
+    { key: 'deputadoEstadual', label: stateUf === 'DF' ? '2️⃣ *Deputado Distrital:*' : '2️⃣ *Deputado Estadual:*' },
+    { key: 'senador1', label: '3️⃣ *Senador (1ª Vaga):*' },
+    { key: 'senador2', label: '4️⃣ *Senador (2ª Vaga):*' },
+    { key: 'governador', label: '5️⃣ *Governador:*' },
+    { key: 'presidente', label: '6️⃣ *Presidente da República:*' }
   ];
 
   for (const c of cargos) {
     const sel = selections[c.key];
-    text += `*${c.label}*\n`;
     if (!sel || !sel.nr) {
-      text += `⚪ _Não preenchido_\n\n`;
+      text += `${c.label} _(Não definido)_\n\n`;
     } else if (sel.tipo === 'branco') {
-      text += `▫️ *VOTO EM BRANCO*\n\n`;
+      text += `${c.label} ▫️ _VOTO EM BRANCO_\n\n`;
     } else if (sel.tipo === 'nulo') {
-      text += `❌ *VOTO NULO*\n\n`;
+      text += `${c.label} ❌ _VOTO NULO_\n\n`;
     } else {
-      const handle = getCandidateHandle(sel, 'x');
-      const handleDisplay = handle.startsWith('@') ? ` (${handle})` : '';
-      text += `👉 *Nº ${sel.nr}* - ${sel.nm}${handleDisplay} • ${sel.sg}\n`;
+      const party = sel.sg ? ` (${sel.sg})` : '';
+      text += `${c.label} *${sel.nr}* - ${sel.nm}${party}\n`;
       if (sel.vices && sel.vices.length > 0) {
         text += `   _Vice: ${sel.vices[0].nm}_\n`;
+      } else if (sel.suplentes && sel.suplentes.length > 0) {
+        text += `   _1º Suplente: ${sel.suplentes[0].nm}_\n`;
       }
       text += `\n`;
     }
   }
 
-  text += `───────────────────────\n`;
-  text += `📱 _Monte seu panfleto digital para 2026!_\n`;
+  text += `━━━━━━━━━━━━━━━━━━━━\n`;
+  text += `📱 _Monte seu panfleto oficial no app Cola 2026!_\n`;
   text += `⚠️ _Lembrete: Leve sua cola anotada ou impressa para a cabine de votação._`;
 
   return text;

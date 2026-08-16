@@ -683,8 +683,8 @@ class App {
   }
 
   clearAllSelections() {
-    if (confirm("Deseja realmente limpar toda a sua cola eleitoral?")) {
-      deviceEngine.haptic('warning');
+    if (confirm("Deseja iniciar um novo panfleto? Suas escolhas atuais serão reiniciadas para você montar uma nova cola 😊")) {
+      deviceEngine.haptic('confirm');
       this.selections = {
         deputadoFederal: null,
         deputadoEstadual: null,
@@ -698,7 +698,7 @@ class App {
       if (this.flowMode === 'step') {
         this.goToStep(0, true);
       }
-      this.showToast("Cola eleitoral reiniciada", "warn");
+      this.showToast("✨ Novo panfleto iniciado com sucesso! 😊", "success");
     }
   }
 
