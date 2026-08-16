@@ -2090,12 +2090,13 @@ body {
 }
 
 .key-num {
-  height: 52px;
+  width: 100%;
+  height: 54px;
   background: #0f172a;
   border: 2px solid #334155;
   border-radius: var(--radius-sm);
   color: #f8fafc;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 4px 0 #020617;
@@ -2103,6 +2104,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .key-num:active {
@@ -2110,8 +2113,9 @@ body {
   box-shadow: none;
 }
 
-.key-zero-wrapper {
+.key-zero {
   grid-column: 2;
+  width: 100%;
 }
 
 .urna-action-keys {
