@@ -12,6 +12,7 @@ import {
   saveFlyerToGallery, 
   copyFlyerImageToClipboard, 
   shareFlyerOnSocial,
+  shareFlyerToPlatform,
   generateSocialPostText,
   getXPostUrl,
   getWhatsAppShareUrl,
@@ -419,9 +420,6 @@ class App {
   updateSocialPostBox() {
     const textarea = document.getElementById('social-post-textarea');
     const counter = document.getElementById('post-char-counter');
-    const linkX = document.getElementById('btn-share-x');
-    const linkWA = document.getElementById('btn-share-wa-direct');
-    const linkFB = document.getElementById('btn-share-fb-direct');
 
     if (!textarea) return;
 
@@ -430,21 +428,17 @@ class App {
       textarea.value = initialText;
     }
 
-    const updateSocialLinks = (text) => {
+    const updateCount = (text) => {
       const len = text.length;
       if (counter) {
-        counter.textContent = `${len} / 140 caracteres`;
-        counter.classList.toggle('warning', len > 140);
+        counter.textContent = `${len} caracteres`;
       }
-      if (linkX) linkX.href = getXPostUrl(text);
-      if (linkWA) linkWA.href = getWhatsAppShareUrl(text);
-      if (linkFB) linkFB.href = getFacebookShareUrl(text);
     };
 
-    updateSocialLinks(textarea.value);
+    updateCount(textarea.value);
     textarea.oninput = () => {
       this.userHasEditedText = true;
-      updateSocialLinks(textarea.value);
+      updateCount(textarea.value);
     };
   }
 
@@ -1016,29 +1010,25 @@ class App {
     // Hero Action: Baixar Foto (Abre em nova aba / salva na galeria)
     document.getElementById('btn-save-photo-bottom')?.addEventListener('click', () => this.handleSavePhoto());
 
-    // Explicit Sharing Buttons:
+    // Explicit Sharing Buttons (All insert and attach the photo of the generated flyer!):
     // 1. 𝕏 Twitter
-    document.getElementById('btn-share-x')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
+    document.getElementById('btn-share-x')?.addEventListener('click', async () => {
+      deviceEngine.haptic('confirm');
+      const stateObj = this.states.find(s => s.uf === this.currentUf);
+      const stateName = stateObj ? stateObj.nome : this.currentUf;
+      const customText = document.getElementById('social-post-textarea')?.value || '';
+      this.showToast("📸 Preparando foto e post para o 𝕏...", "info");
+      await shareFlyerToPlatform('x', stateName, this.currentUf, this.selections, customText, this.currentFlyerFormat);
     });
 
     // 2. 💬 WhatsApp
-    document.getElementById('btn-share-wa-direct')?.addEventListener('click', async (e) => {
+    document.getElementById('btn-share-wa-direct')?.addEventListener('click', async () => {
+      deviceEngine.haptic('confirm');
       const stateObj = this.states.find(s => s.uf === this.currentUf);
       const stateName = stateObj ? stateObj.nome : this.currentUf;
-
-      if (navigator.share && navigator.canShare) {
-        e.preventDefault();
-        deviceEngine.haptic('confirm');
-        this.showToast("📲 Compartilhando com foto no WhatsApp...", "info");
-        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
-      } else {
-        deviceEngine.haptic('selection');
-        try {
-          await copyFlyerImageToClipboard(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
-          this.showToast("📋 Imagem do panfleto copiada! Cole (Ctrl+V) no WhatsApp.", "success");
-        } catch (err) {}
-      }
+      const customText = document.getElementById('social-post-textarea')?.value || '';
+      this.showToast("📲 Compartilhando foto e texto no WhatsApp...", "info");
+      await shareFlyerToPlatform('whatsapp', stateName, this.currentUf, this.selections, customText, this.currentFlyerFormat);
     });
 
     // 3. 📸 Instagram
@@ -1046,34 +1036,19 @@ class App {
       deviceEngine.haptic('confirm');
       const stateObj = this.states.find(s => s.uf === this.currentUf);
       const stateName = stateObj ? stateObj.nome : this.currentUf;
-
-      if (navigator.share && navigator.canShare) {
-        this.showToast("📸 Compartilhando foto no Instagram...", "info");
-        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
-      } else {
-        const text = document.getElementById('social-post-textarea')?.value || '';
-        await copyToClipboard(text);
-        this.showToast("📋 Legenda copiada! Abrindo foto e Instagram...", "info");
-        await this.handleSavePhoto();
-        setTimeout(() => {
-          window.open('https://www.instagram.com/', '_blank');
-        }, 800);
-      }
+      const customText = document.getElementById('social-post-textarea')?.value || '';
+      this.showToast("📸 Compartilhando foto no Instagram...", "info");
+      await shareFlyerToPlatform('instagram', stateName, this.currentUf, this.selections, customText, this.currentFlyerFormat);
     });
 
     // 4. 🔵 Facebook
-    document.getElementById('btn-share-fb-direct')?.addEventListener('click', async (e) => {
+    document.getElementById('btn-share-fb-direct')?.addEventListener('click', async () => {
+      deviceEngine.haptic('confirm');
       const stateObj = this.states.find(s => s.uf === this.currentUf);
       const stateName = stateObj ? stateObj.nome : this.currentUf;
-
-      if (navigator.share && navigator.canShare) {
-        e.preventDefault();
-        deviceEngine.haptic('confirm');
-        this.showToast("🔵 Compartilhando com foto no Facebook...", "info");
-        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
-      } else {
-        deviceEngine.haptic('selection');
-      }
+      const customText = document.getElementById('social-post-textarea')?.value || '';
+      this.showToast("🔵 Compartilhando foto e texto no Facebook...", "info");
+      await shareFlyerToPlatform('facebook', stateName, this.currentUf, this.selections, customText, this.currentFlyerFormat);
     });
 
     // Mobile Bottom Floating Bar Actions

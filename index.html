@@ -486,54 +486,54 @@
         </button>
       </div>
 
-      <!-- 3. TEXTO EDITÁVEL ANTES DO POST -->
+      <!-- 3. TEXTO EDITÁVEL ANTES DO POST (PULANDO LINHA POR CARGO) -->
       <div class="final-post-text-box">
         <div class="final-post-label-row">
           <label for="social-post-textarea">
-            <span>✍️ Texto para o post nas redes:</span>
+            <span>✍️ Texto da Cola (1 linha por cargo):</span>
           </label>
-          <span class="char-counter" id="post-char-counter">0 / 140 caracteres</span>
+          <span class="char-counter" id="post-char-counter">0 caracteres</span>
         </div>
-        <textarea id="social-post-textarea" rows="2" maxlength="140" placeholder="Gerando texto da sua cola..."></textarea>
+        <textarea id="social-post-textarea" rows="7" placeholder="Gerando texto da sua cola..."></textarea>
       </div>
 
-      <!-- 4. BOTÕES EXPLÍCITOS DE COMPARTILHAMENTO (X, INSTAGRAM, WHATSAPP, FACEBOOK) -->
+      <!-- 4. BOTÕES EXPLÍCITOS DE COMPARTILHAMENTO (INSEREM A FOTO DO PANFLETO) -->
       <div class="final-explicit-shares-grid">
         <!-- 𝕏 Twitter -->
-        <a class="btn-explicit-share btn-share-x" id="btn-share-x" target="_blank" rel="noopener noreferrer">
+        <button class="btn-explicit-share btn-share-x" id="btn-share-x" title="Compartilhar foto e texto no 𝕏">
           <span class="explicit-share-icon">𝕏</span>
           <div class="explicit-share-info">
             <strong>Postar no 𝕏</strong>
-            <small>Twitter</small>
+            <small>Com foto</small>
           </div>
-        </a>
+        </button>
 
         <!-- 💬 WhatsApp -->
-        <a class="btn-explicit-share btn-share-wa" id="btn-share-wa-direct" target="_blank" rel="noopener noreferrer">
+        <button class="btn-explicit-share btn-share-wa" id="btn-share-wa-direct" title="Compartilhar foto e texto no WhatsApp">
           <span class="explicit-share-icon">💬</span>
           <div class="explicit-share-info">
             <strong>WhatsApp</strong>
-            <small>Conversas e Status</small>
+            <small>Com foto</small>
           </div>
-        </a>
+        </button>
 
         <!-- 📸 Instagram -->
-        <button class="btn-explicit-share btn-share-ig" id="btn-share-ig-direct">
+        <button class="btn-explicit-share btn-share-ig" id="btn-share-ig-direct" title="Compartilhar foto no Instagram">
           <span class="explicit-share-icon">📸</span>
           <div class="explicit-share-info">
             <strong>Instagram</strong>
-            <small>Stories e Feed</small>
+            <small>Stories / Feed</small>
           </div>
         </button>
 
         <!-- 🔵 Facebook -->
-        <a class="btn-explicit-share btn-share-fb" id="btn-share-fb-direct" target="_blank" rel="noopener noreferrer">
+        <button class="btn-explicit-share btn-share-fb" id="btn-share-fb-direct" title="Compartilhar foto e texto no Facebook">
           <span class="explicit-share-icon">🔵</span>
           <div class="explicit-share-info">
             <strong>Facebook</strong>
-            <small>Feed e Grupos</small>
+            <small>Com foto</small>
           </div>
-        </a>
+        </button>
       </div>
 
       <!-- 5. AÇÃO SECUNDÁRIA LIMPA -->

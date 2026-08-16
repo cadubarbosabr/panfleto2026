@@ -107,8 +107,11 @@ function getShortCandidateName(nm) {
 }
 
 /**
- * Suggests a simple, clear post text: Cargo | Nome | numero with CTA url (strictly <= 140 characters)
- * Removes initial "Cola 2026" and ensures Dep Estadual / Distrital always fits.
+/**
+ * Suggests a simple, clear post text with 1 line per candidate:
+ * Cargo | Nome | Numero
+ * ...
+ * 👉 panfletos2026.vercel.app
  */
 export function generateSocialPostText(stateUf, selections) {
   const siteDomain = getAppSiteUrl(true);
@@ -124,44 +127,17 @@ export function generateSocialPostText(stateUf, selections) {
   ].filter(c => c.sel && (c.sel.nr || c.sel.tipo));
 
   if (cands.length === 0) {
-    return `Monte seu panfleto eleitoral (${stateUf}) ${cta}`;
+    return `Monte seu panfleto eleitoral (${stateUf})\n\n${cta}`;
   }
 
-  const buildItems = (shorten = false, spaced = true) => {
-    const sep = spaced ? ' | ' : '|';
-    return cands.map(c => {
-      if (c.sel.tipo === 'branco') return `${c.cargo}${sep}Branco`;
-      if (c.sel.tipo === 'nulo') return `${c.cargo}${sep}Nulo`;
-      const name = shorten ? getShortCandidateName(c.sel.nm) : (c.sel.nm || '').trim();
-      return `${c.cargo}${sep}${name}${sep}${c.sel.nr}`;
-    });
-  };
+  const lines = cands.map(c => {
+    if (c.sel.tipo === 'branco') return `${c.cargo} | Branco`;
+    if (c.sel.tipo === 'nulo') return `${c.cargo} | Nulo`;
+    const name = (c.sel.nm || '').trim();
+    return `${c.cargo} | ${name} | ${c.sel.nr}`;
+  });
 
-  // Attempt 1: Full names, standard spaced pipes "Cargo | Nome | 00" + bullet separator
-  let items = buildItems(false, true);
-  let text = `${items.join(' • ')} ${cta}`;
-  if (text.length <= 140) return text;
-
-  // Attempt 2: Full names + standard pipe separator
-  text = `${items.join(' | ')} ${cta}`;
-  if (text.length <= 140) return text;
-
-  // Attempt 3: Shortened primary names + bullet separator
-  items = buildItems(true, true);
-  text = `${items.join(' • ')} ${cta}`;
-  if (text.length <= 140) return text;
-
-  // Attempt 4: Shortened primary names + pipe separator
-  text = `${items.join(' | ')} ${cta}`;
-  if (text.length <= 140) return text;
-
-  // Attempt 5: Compact pipes "Cargo|Nome|00" + bullet separator (Guaranteed <= 140 chars for all 6 cargos)
-  items = buildItems(true, false);
-  text = `${items.join(' • ')} ${cta}`;
-  if (text.length <= 140) return text;
-
-  // Final fallback if names are exceptionally long
-  return text.substring(0, 140);
+  return `${lines.join('\n')}\n\n${cta}`;
 }
 
 /**
@@ -726,52 +702,82 @@ export async function copyFlyerImageToClipboard(stateName, stateUf, selections, 
   });
 }
 
-// Native Share API for Social Networks (Instagram Stories, WhatsApp, Twitter)
-export async function shareFlyerOnSocial(stateName, stateUf, selections, format = 'stories') {
+/**
+ * Unified share handler for all platforms (X, WhatsApp, Instagram, Facebook).
+ * Always attaches/inserts the photo of the generated flyer!
+ */
+export async function shareFlyerToPlatform(platform, stateName, stateUf, selections, customText = null, format = 'stories') {
   const canvas = await generateCanvasFlyer(stateName, stateUf, selections, format);
-  
+  const text = (customText !== null && customText !== undefined && customText.trim() !== '') 
+    ? customText.trim() 
+    : generateSocialPostText(stateUf, selections);
+
   return new Promise((resolve) => {
     canvas.toBlob(async (blob) => {
-      if (!blob) return resolve(false);
+      if (!blob) return resolve({ success: false });
 
       const fileName = `panfleto_eleitoral_2026_${stateUf}.png`;
       const file = new File([blob], fileName, { type: 'image/png' });
-      const text = generateSocialPostText(stateUf, selections);
 
-      // Attempt native Web Share API with photo file
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      // 1. Mobile Native Web Share API with photo file attached
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
             files: [file],
             title: `Cola Eleitoral 2026 (${stateUf})`,
             text: text
           });
-          resolve(true);
+          resolve({ success: true, mode: 'native_share' });
           return;
         } catch (err) {
           if (err.name === 'AbortError') {
-            resolve(false);
+            resolve({ success: false, mode: 'aborted' });
             return;
           }
-          console.log('Share error fallback:', err);
+          console.log('Native share error, falling back:', err);
         }
       }
 
-      // Fallback: copy image to clipboard if supported
+      // 2. Desktop & Fallback: Auto copy image to system clipboard
       try {
         if (navigator.clipboard && window.ClipboardItem) {
           await navigator.clipboard.write([
             new ClipboardItem({ 'image/png': blob })
           ]);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log('Clipboard photo copy error:', e);
+      }
 
-      // Open in new tab and download
+      // 3. Open/Save the HD photo so the user has the image ready
       await saveFlyerToGallery(stateName, stateUf, selections, format);
-      resolve(true);
+
+      // 4. Open the destination platform with text
+      let targetUrl = '';
+      if (platform === 'x') {
+        targetUrl = getXPostUrl(text);
+      } else if (platform === 'whatsapp') {
+        targetUrl = getWhatsAppShareUrl(text);
+      } else if (platform === 'facebook') {
+        targetUrl = getFacebookShareUrl(text);
+      } else if (platform === 'instagram') {
+        targetUrl = 'https://www.instagram.com/';
+      }
+
+      if (targetUrl) {
+        setTimeout(() => {
+          window.open(targetUrl, '_blank');
+        }, 500);
+      }
+
+      resolve({ success: true, mode: 'fallback_desktop' });
     }, 'image/png');
   });
 }
+
+// Backward compatibility alias
+export const shareFlyerOnSocial = (stateName, stateUf, selections, format = 'stories') => 
+  shareFlyerToPlatform('general', stateName, stateUf, selections, null, format);
 
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
   ctx.beginPath();
