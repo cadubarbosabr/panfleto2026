@@ -2234,6 +2234,173 @@ body {
 }
 
 /* ==========================================================================
+   FLYER COMPLETION HUB (FINAL DA CRIAÇÃO DO PANFLETO)
+   ========================================================================== */
+
+.flyer-completion-hub {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border: 1.5px solid var(--border-highlight);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem 1.75rem 2rem;
+  margin: 2.5rem 0 3rem;
+  text-align: center;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(16, 185, 129, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.completion-header {
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.completion-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.completion-header h3 {
+  font-size: 1.65rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.completion-header p {
+  font-size: 0.925rem;
+  color: var(--text-secondary);
+  max-width: 540px;
+}
+
+.completion-progress-tag {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent-emerald);
+  font-family: var(--font-mono);
+  margin-top: 0.25rem;
+}
+
+.completion-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.btn-completion-hero {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #059669 0%, #10b981 50%, #3b82f6 100%);
+  border: 1px solid #10b981;
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.btn-completion-hero:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.45);
+}
+
+.btn-hero-icon {
+  font-size: 2.25rem;
+}
+
+.btn-hero-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-hero-text strong {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.btn-hero-text small {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.btn-completion-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.btn-completion-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-card-icon {
+  font-size: 1.85rem;
+}
+
+.btn-card-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-card-text strong {
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.btn-card-text small {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+.btn-card-urna:hover {
+  border-color: #f59e0b;
+}
+
+.completion-footer-row {
+  margin-top: 1.75rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .completion-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
    ELECTION INFO & TIPS SECTION
    ========================================================================== */
 

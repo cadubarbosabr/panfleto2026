@@ -955,10 +955,20 @@ class App {
       });
     });
 
-    // Finish Step button
+    // Finish Step button (Smooth scroll to completion hub)
     document.getElementById('btn-step-finish')?.addEventListener('click', () => {
       deviceEngine.haptic('confirm');
-      this.openDigitalFlyerModal('stories');
+      const completionHub = document.getElementById('flyer-completion-section');
+      if (completionHub) {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = completionHub.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      } else {
+        this.openDigitalFlyerModal('stories');
+      }
     });
 
     // Fast State Badges in Welcome Modal
@@ -974,9 +984,17 @@ class App {
       });
     });
 
-    // Post Social Modal Buttons (Header, Bottom toolbar, Mobile bottom nav)
-    document.getElementById('btn-open-postar')?.addEventListener('click', () => this.openPostSocialModal());
+    // Completion Hub Buttons
     document.getElementById('btn-open-postar-bottom')?.addEventListener('click', () => this.openPostSocialModal());
+    document.getElementById('btn-open-flyer-bottom')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
+    document.getElementById('btn-open-urna-bottom')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
+      this.urnaSimulator.open(true);
+    });
+    document.getElementById('btn-save-photo-bottom')?.addEventListener('click', () => this.handleSavePhoto());
+
+    // Post Social Modal Buttons
+    document.getElementById('btn-open-postar')?.addEventListener('click', () => this.openPostSocialModal());
     document.getElementById('btn-mobile-postar')?.addEventListener('click', () => this.openPostSocialModal());
 
     // Close Post Social Modal
