@@ -86,16 +86,16 @@ export function getCandidateHandle(cand, network = 'x') {
 }
 
 /**
- * Returns current site URL or production Vercel fallback
+ * Returns current site URL or official production Vercel URL with valid https:// hyperlink
  */
-export function getAppSiteUrl(short = false) {
+export function getAppSiteUrl() {
   if (typeof window !== 'undefined' && window.location) {
-    const host = window.location.host;
-    if (host && !host.includes('localhost') && !host.includes('127.0.0.1') && host !== '') {
-      return short ? host : window.location.origin;
+    const origin = window.location.origin;
+    if (origin && !origin.includes('localhost') && !origin.includes('127.0.0.1') && !origin.includes('file://')) {
+      return origin;
     }
   }
-  return short ? 'panfletos2026.vercel.app' : 'https://panfletos2026.vercel.app';
+  return 'https://panfletos2026.vercel.app';
 }
 
 function getShortCandidateName(nm) {
@@ -107,15 +107,14 @@ function getShortCandidateName(nm) {
 }
 
 /**
-/**
- * Suggests a simple, clear post text with 1 line per candidate:
+ * Suggests a simple, clear post text with 1 line per candidate and a valid clickable hyperlink:
  * Cargo | Nome | Numero
  * ...
- * 👉 panfletos2026.vercel.app
+ * 👉 https://panfletos2026.vercel.app
  */
 export function generateSocialPostText(stateUf, selections) {
-  const siteDomain = getAppSiteUrl(true);
-  const cta = `👉 ${siteDomain}`;
+  const siteUrl = getAppSiteUrl();
+  const cta = `👉 ${siteUrl}`;
 
   const cands = [
     { cargo: 'Pres', sel: selections.presidente },
