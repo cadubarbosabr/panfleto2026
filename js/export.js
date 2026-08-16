@@ -86,10 +86,24 @@ export function getCandidateHandle(cand, network = 'x') {
 }
 
 /**
- * Suggests an engaging, structured post text strictly <= 140 characters
+ * Returns current site URL or production Vercel fallback
+ */
+export function getAppSiteUrl(short = false) {
+  if (typeof window !== 'undefined' && window.location) {
+    const host = window.location.host;
+    if (host && !host.includes('localhost') && !host.includes('127.0.0.1') && host !== '') {
+      return short ? host : window.location.origin;
+    }
+  }
+  return short ? 'panfleto2026.vercel.app' : 'https://panfleto2026.vercel.app';
+}
+
+/**
+ * Suggests an engaging, structured post text strictly <= 140 characters with site URL
  */
 export function generateSocialPostText(stateUf, selections, network = 'x') {
   const items = [];
+  const siteDomain = getAppSiteUrl(true);
 
   const addCand = (label, sel) => {
     if (!sel || !sel.nr) return;
@@ -112,42 +126,44 @@ export function generateSocialPostText(stateUf, selections, network = 'x') {
 
   // If no candidates selected yet
   if (items.length === 0) {
-    return `🗳️ Minha Cola 2026 (${stateUf}): monte seu panfleto oficial no app! #Eleicoes2026`;
+    return `🗳️ Minha Cola 2026 (${stateUf}): monte seu panfleto online em ${siteDomain} #Eleicoes2026`;
   }
 
   const prefix = `🗳️ Cola 2026 (${stateUf}): `;
-  const tag = ' #Eleicoes2026';
+  const linkSuffix = ` 📲 ${siteDomain}`;
 
-  // Format 1: Separated by " • "
+  // Format 1: Bullet separated with site URL
   let candidateStr = items.join(' • ');
-  let fullText = `${prefix}${candidateStr}${tag}`;
+  let fullText = `${prefix}${candidateStr}${linkSuffix}`;
   if (fullText.length <= 140) {
     return fullText;
   }
 
-  // Format 2: Separated by " | "
+  // Format 2: Pipe separated with site URL
   candidateStr = items.join(' | ');
-  fullText = `${prefix}${candidateStr}${tag}`;
+  fullText = `${prefix}${candidateStr}${linkSuffix}`;
   if (fullText.length <= 140) {
     return fullText;
   }
 
-  // Format 3: Compact pipe without spaces
+  // Format 3: Compact pipe without space
   candidateStr = items.join('|');
-  fullText = `${prefix}${candidateStr}${tag}`;
+  fullText = `${prefix}${candidateStr}${linkSuffix}`;
   if (fullText.length <= 140) {
     return fullText;
   }
 
-  // Format 4: Prioritize major positions (Pres, Gov, Sen, Dep) to fit strictly <= 140 chars
-  while (items.length > 2 && `${prefix}${items.join(' | ')}${tag}`.length > 140) {
+  // Format 4: Prioritize major positions (Pres, Gov, Sen, Dep) to fit strictly <= 140 chars with site URL
+  while (items.length > 1 && `${prefix}${items.join(' • ')}${linkSuffix}`.length > 140) {
     items.pop();
   }
 
-  fullText = `${prefix}${items.join(' | ')}${tag}`;
-  if (fullText.length > 140) {
-    fullText = `${prefix}${items.join('|')}${tag}`;
+  fullText = `${prefix}${items.join(' • ')}${linkSuffix}`;
+  if (fullText.length <= 140) {
+    return fullText;
   }
+
+  fullText = `${prefix}${items.join('|')}${linkSuffix}`;
   if (fullText.length > 140) {
     fullText = fullText.substring(0, 137) + '...';
   }
@@ -168,6 +184,8 @@ export function getWhatsAppShareUrl(text) {
 
 export function formatWhatsAppMessage(stateName, stateUf, selections) {
   const dateStr = "04 de Outubro de 2026";
+  const siteUrl = getAppSiteUrl(false);
+
   let text = `🗳️ *MINHA COLA ELEITORAL 2026* 🇧🇷\n`;
   text += `📍 *Estado:* ${stateName} (${stateUf})\n`;
   text += `📅 *Eleições:* ${dateStr}\n`;
@@ -203,7 +221,7 @@ export function formatWhatsAppMessage(stateName, stateUf, selections) {
   }
 
   text += `━━━━━━━━━━━━━━━━━━━━\n`;
-  text += `📱 _Monte seu panfleto oficial no app Cola 2026!_\n`;
+  text += `📱 *Monte seu panfleto online:* ${siteUrl}\n`;
   text += `⚠️ _Lembrete: Leve sua cola anotada ou impressa para a cabine de votação._`;
 
   return text;
@@ -444,15 +462,19 @@ export async function generateCanvasFlyer(stateName, stateUf, selections, format
       }
     });
 
-    // Footer Advice
+    // Footer Advice & Discreet Non-Partisan Watermark
     ctx.fillStyle = '#e2e8f0';
     ctx.font = 'bold 22px system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('📱 Salve esta imagem no celular ou compartilhe nas redes sociais!', 540, 1805);
+    ctx.fillText('📱 Salve esta imagem no celular ou compartilhe nas redes sociais!', 540, 1795);
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '19px system-ui, sans-serif';
-    ctx.fillText('Panfleto Oficial do Eleitor • Eleições 2026', 540, 1840);
+    ctx.font = '18px system-ui, sans-serif';
+    ctx.fillText('Panfleto Oficial do Eleitor • Eleições 2026', 540, 1830);
+
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.65)';
+    ctx.font = '15px system-ui, sans-serif';
+    ctx.fillText('🛡️ Não afiliado a nenhum partido político • Dados públicos do TSE', 540, 1865);
   }
 
   // --- RENDER 2-COLUMN GRID (FOR FEED 4:5 OR SQUARE 1:1) ---
@@ -551,9 +573,13 @@ export async function generateCanvasFlyer(stateName, stateUf, selections, format
 
     // Footer on Post / Square
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '18px system-ui, sans-serif';
+    ctx.font = '17px system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Panfleto Oficial do Eleitor • Eleições 2026', canvas.width / 2, canvas.height - 50);
+    ctx.fillText('Panfleto Oficial do Eleitor • Eleições 2026', canvas.width / 2, canvas.height - 42);
+
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.65)';
+    ctx.font = '13.5px system-ui, sans-serif';
+    ctx.fillText('🛡️ Não afiliado a nenhum partido político • Dados públicos do TSE', canvas.width / 2, canvas.height - 18);
   }
 
   return canvas;
