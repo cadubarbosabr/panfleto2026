@@ -98,55 +98,70 @@ export function getAppSiteUrl(short = false) {
   return short ? 'panfleto2026.vercel.app' : 'https://panfleto2026.vercel.app';
 }
 
+function getShortCandidateName(nm) {
+  if (!nm) return '';
+  const clean = nm.trim();
+  if (clean.length <= 11) return clean;
+  const parts = clean.split(/\s+/);
+  return parts[0];
+}
+
 /**
  * Suggests a simple, clear post text: Cargo | Nome | numero with CTA url (strictly <= 140 characters)
+ * Removes initial "Cola 2026" and ensures Dep Estadual / Distrital always fits.
  */
 export function generateSocialPostText(stateUf, selections) {
-  const items = [];
   const siteDomain = getAppSiteUrl(true);
-  const cta = `👉 Monte a sua: ${siteDomain}`;
+  const cta = `👉 ${siteDomain}`;
 
-  const addCand = (cargo, sel) => {
-    if (!sel || !sel.nr) return;
-    const name = (sel.nm || '').trim();
-    if (sel.tipo === 'branco') {
-      items.push(`${cargo} | Branco`);
-    } else if (sel.tipo === 'nulo') {
-      items.push(`${cargo} | Nulo`);
-    } else {
-      items.push(`${cargo} | ${name} | ${sel.nr}`);
-    }
+  const cands = [
+    { cargo: 'Pres', sel: selections.presidente },
+    { cargo: 'Gov', sel: selections.governador },
+    { cargo: 'Sen', sel: selections.senador1 },
+    { cargo: 'Sen2', sel: selections.senador2 },
+    { cargo: 'Dep', sel: selections.deputadoFederal },
+    { cargo: stateUf === 'DF' ? 'Dist' : 'Est', sel: selections.deputadoEstadual }
+  ].filter(c => c.sel && (c.sel.nr || c.sel.tipo));
+
+  if (cands.length === 0) {
+    return `Monte seu panfleto eleitoral (${stateUf}) ${cta}`;
+  }
+
+  const buildItems = (shorten = false, spaced = true) => {
+    const sep = spaced ? ' | ' : '|';
+    return cands.map(c => {
+      if (c.sel.tipo === 'branco') return `${c.cargo}${sep}Branco`;
+      if (c.sel.tipo === 'nulo') return `${c.cargo}${sep}Nulo`;
+      const name = shorten ? getShortCandidateName(c.sel.nm) : (c.sel.nm || '').trim();
+      return `${c.cargo}${sep}${name}${sep}${c.sel.nr}`;
+    });
   };
 
-  addCand('Pres', selections.presidente);
-  addCand('Gov', selections.governador);
-  addCand('Sen', selections.senador1);
-  addCand('Sen2', selections.senador2);
-  addCand('Dep Fed', selections.deputadoFederal);
-  addCand(stateUf === 'DF' ? 'Dep Dist' : 'Dep Est', selections.deputadoEstadual);
+  // Attempt 1: Full names, standard spaced pipes "Cargo | Nome | 00" + bullet separator
+  let items = buildItems(false, true);
+  let text = `${items.join(' • ')} ${cta}`;
+  if (text.length <= 140) return text;
 
-  if (items.length === 0) {
-    return `🗳️ Minha Cola 2026 (${stateUf})\n${cta}`;
-  }
+  // Attempt 2: Full names + standard pipe separator
+  text = `${items.join(' | ')} ${cta}`;
+  if (text.length <= 140) return text;
 
-  // Option 1: Clean bullet separated single line with CTA
-  let fullText = `Cola 2026 (${stateUf}): ${items.join(' • ')} ${cta}`;
-  if (fullText.length <= 140) {
-    return fullText;
-  }
+  // Attempt 3: Shortened primary names + bullet separator
+  items = buildItems(true, true);
+  text = `${items.join(' • ')} ${cta}`;
+  if (text.length <= 140) return text;
 
-  // Option 2: Pipe separated with CTA
-  fullText = `Cola 2026 (${stateUf}): ${items.join(' | ')} ${cta}`;
-  if (fullText.length <= 140) {
-    return fullText;
-  }
+  // Attempt 4: Shortened primary names + pipe separator
+  text = `${items.join(' | ')} ${cta}`;
+  if (text.length <= 140) return text;
 
-  // Option 3: Trim lower cargos to fit strictly <= 140 chars with CTA
-  while (items.length > 2 && `Cola 2026 (${stateUf}): ${items.join(' | ')} ${cta}`.length > 140) {
-    items.pop();
-  }
+  // Attempt 5: Compact pipes "Cargo|Nome|00" + bullet separator (Guaranteed <= 140 chars for all 6 cargos)
+  items = buildItems(true, false);
+  text = `${items.join(' • ')} ${cta}`;
+  if (text.length <= 140) return text;
 
-  return `Cola 2026 (${stateUf}): ${items.join(' | ')} ${cta}`;
+  // Final fallback if names are exceptionally long
+  return text.substring(0, 140);
 }
 
 /**
