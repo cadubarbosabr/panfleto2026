@@ -2289,6 +2289,52 @@ body {
   line-height: 1.45;
 }
 
+/* App Footer & Creator Badge */
+.app-footer {
+  padding: 2.5rem 0 3.5rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  margin-top: 2rem;
+}
+
+.footer-creator {
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.footer-creator-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.creator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+}
+
+.creator-badge:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: var(--accent-emerald);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--accent-emerald-glow);
+}
+
 /* Toast Notifications */
 .toast-container {
   position: fixed;
