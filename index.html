@@ -67,15 +67,7 @@
       </div>
 
       <div class="state-controls">
-        <button class="btn-mode-quick active" id="btn-quick-web" title="Modo Interativo de Montar Panfleto">
-          <span>📱</span>
-          <span>Modo Web</span>
-        </button>
-        <button class="btn-mode-quick btn-mode-quick-urna" id="btn-quick-urna" title="Abrir Simulador Oficial da Urna Eletrônica">
-          <span>🗳️</span>
-          <span>Modo Urna</span>
-        </button>
-        <button class="btn-change-state" id="btn-open-state-modal" title="Trocar Estado ou Modo">
+        <button class="btn-change-state" id="btn-open-state-modal" title="Trocar Estado / Região">
           <span>🔄</span>
           <span>Trocar Estado</span>
         </button>
@@ -745,119 +737,60 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: ONBOARDING / SELEÇÃO DE ESTADO E MODO (WEB vs URNA)
+       MODAL: ONBOARDING / SELEÇÃO DE ESTADO (1-CLIQUE RÁPIDO & DIRETO)
        ========================================================================== -->
   <div class="welcome-state-modal" id="modal-welcome-state">
     <div class="welcome-state-box">
       <div class="bottom-sheet-handle"></div>
 
-      <!-- STEP 1: STATE SELECTION -->
-      <div id="welcome-step-1" class="welcome-step-view active">
-        <div class="welcome-state-header">
-          <div class="welcome-title-tag">🇧🇷 Passo 1 de 2 • Seleção de Estado</div>
-          <h2>Para qual estado você deseja montar a Cola?</h2>
-          <p>
-            Selecione o estado onde você vota para filtrar os candidatos a <strong>Deputados</strong>, <strong>Senadores</strong> e <strong>Governador</strong>.
-          </p>
-          <div class="welcome-national-notice">
-            <span>🇧🇷</span>
-            <span>O cargo de <strong>Presidente da República</strong> é comum para todo o Brasil.</span>
-          </div>
-
-          <!-- Fast Popular State Chips for 1-Tap Access -->
-          <div class="fast-states-row">
-            <span class="fast-states-title">⚡ Acesso Rápido:</span>
-            <div class="fast-states-chips">
-              <button class="chip-uf-fast" data-uf="SP">SP</button>
-              <button class="chip-uf-fast" data-uf="RJ">RJ</button>
-              <button class="chip-uf-fast" data-uf="MG">MG</button>
-              <button class="chip-uf-fast" data-uf="BA">BA</button>
-              <button class="chip-uf-fast" data-uf="RS">RS</button>
-              <button class="chip-uf-fast" data-uf="PR">PR</button>
-              <button class="chip-uf-fast" data-uf="PE">PE</button>
-              <button class="chip-uf-fast" data-uf="CE">CE</button>
-              <button class="chip-uf-fast" data-uf="DF">DF</button>
-              <button class="chip-uf-fast" data-uf="GO">GO</button>
-              <button class="chip-uf-fast" data-uf="SC">SC</button>
-              <button class="chip-uf-fast" data-uf="PA">PA</button>
-            </div>
-          </div>
+      <div class="welcome-state-header">
+        <div class="welcome-title-tag">🇧🇷 Eleições Gerais 2026</div>
+        <h2>Para qual estado você deseja montar a Cola?</h2>
+        <p>
+          Selecione o estado onde você vota para filtrar os candidatos a <strong>Deputados</strong>, <strong>Senadores</strong> e <strong>Governador</strong>.
+        </p>
+        <div class="welcome-national-notice">
+          <span>🇧🇷</span>
+          <span>O cargo de <strong>Presidente da República</strong> é comum para todo o Brasil.</span>
         </div>
 
-        <div class="region-tabs-bar">
-          <div class="region-tabs" id="region-filter-tabs">
-            <button class="region-tab-btn active" data-region="TODOS">Todos (27)</button>
-            <button class="region-tab-btn" data-region="SUDESTE">Sudeste</button>
-            <button class="region-tab-btn" data-region="SUL">Sul</button>
-            <button class="region-tab-btn" data-region="NORDESTE">Nordeste</button>
-            <button class="region-tab-btn" data-region="CENTRO-OESTE">Centro-Oeste</button>
-            <button class="region-tab-btn" data-region="NORTE">Norte</button>
+        <!-- Fast Popular State Chips for 1-Tap Access -->
+        <div class="fast-states-row">
+          <span class="fast-states-title">⚡ Acesso Rápido:</span>
+          <div class="fast-states-chips">
+            <button class="chip-uf-fast" data-uf="SP">SP</button>
+            <button class="chip-uf-fast" data-uf="RJ">RJ</button>
+            <button class="chip-uf-fast" data-uf="MG">MG</button>
+            <button class="chip-uf-fast" data-uf="BA">BA</button>
+            <button class="chip-uf-fast" data-uf="RS">RS</button>
+            <button class="chip-uf-fast" data-uf="PR">PR</button>
+            <button class="chip-uf-fast" data-uf="PE">PE</button>
+            <button class="chip-uf-fast" data-uf="CE">CE</button>
+            <button class="chip-uf-fast" data-uf="DF">DF</button>
+            <button class="chip-uf-fast" data-uf="GO">GO</button>
+            <button class="chip-uf-fast" data-uf="SC">SC</button>
+            <button class="chip-uf-fast" data-uf="PA">PA</button>
           </div>
-
-          <div class="state-search-box">
-            <input type="text" id="input-search-state" placeholder="Buscar estado ou UF...">
-          </div>
-        </div>
-
-        <div class="welcome-states-grid-scroll">
-          <div class="welcome-states-grid" id="welcome-states-container"></div>
         </div>
       </div>
 
-      <!-- STEP 2: MODE SELECTION (COMPACT & ULTRA-FLUID) -->
-      <div id="welcome-step-2" class="welcome-step-view" style="display: none;">
-        <div class="welcome-state-header compact-step2-header">
-          <div class="welcome-title-tag">🇧🇷 Passo 2 de 2 • Escolha da Experiência</div>
-          <h2 style="font-size: 1.35rem; margin-bottom: 0.25rem;">Como você deseja começar?</h2>
-          <p id="welcome-mode-selected-state-text" style="font-size: 0.85rem;">
-            Estado selecionado: <strong>São Paulo (SP)</strong>
-          </p>
+      <div class="region-tabs-bar">
+        <div class="region-tabs" id="region-filter-tabs">
+          <button class="region-tab-btn active" data-region="TODOS">Todos (27)</button>
+          <button class="region-tab-btn" data-region="SUDESTE">Sudeste</button>
+          <button class="region-tab-btn" data-region="SUL">Sul</button>
+          <button class="region-tab-btn" data-region="NORDESTE">Nordeste</button>
+          <button class="region-tab-btn" data-region="CENTRO-OESTE">Centro-Oeste</button>
+          <button class="region-tab-btn" data-region="NORTE">Norte</button>
         </div>
 
-        <div class="welcome-mode-compact-list">
-          <!-- Option 1: Modo Interativo Web -->
-          <div class="welcome-mode-row-card" id="btn-choose-mode-web">
-            <div class="mode-row-icon-box">
-              <span>📱</span>
-            </div>
-            <div class="mode-row-info">
-              <div class="mode-row-title-badge">
-                <h4>Modo Panfleto Web</h4>
-                <span class="mode-mini-badge">Popular</span>
-              </div>
-              <p>Monte sua colinha cargo por cargo e gere imagens para redes sociais.</p>
-            </div>
-            <button class="btn btn-primary mode-row-btn" tabindex="-1">
-              <span>Iniciar</span>
-              <span>➔</span>
-            </button>
-          </div>
-
-          <!-- Option 2: Modo Urna Eletrônica Oficial -->
-          <div class="welcome-mode-row-card mode-row-urna" id="btn-choose-mode-urna">
-            <div class="mode-row-icon-box urna-icon-box">
-              <span>🗳️</span>
-            </div>
-            <div class="mode-row-info">
-              <div class="mode-row-title-badge">
-                <h4>Simulador da Urna</h4>
-                <span class="mode-mini-badge badge-gold">⭐ Sons Oficiais</span>
-              </div>
-              <p>Visor e teclado idênticos ao TSE com sons reais de confirmação.</p>
-            </div>
-            <button class="btn mode-row-btn btn-urna-row" tabindex="-1">
-              <span>Votar</span>
-              <span>🗳️</span>
-            </button>
-          </div>
+        <div class="state-search-box">
+          <input type="text" id="input-search-state" placeholder="Buscar estado ou UF...">
         </div>
+      </div>
 
-        <div class="welcome-mode-footer compact-footer">
-          <button class="btn btn-change-state" id="btn-back-to-step1" style="padding: 0.4rem 0.85rem; font-size: 0.8rem;">
-            <span>←</span>
-            <span>Trocar Estado Selecionado</span>
-          </button>
-        </div>
+      <div class="welcome-states-grid-scroll">
+        <div class="welcome-states-grid" id="welcome-states-container"></div>
       </div>
 
     </div>

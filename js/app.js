@@ -337,34 +337,18 @@ class App {
     }
   }
 
-  // Welcome / Onboarding State & Mode Selection Modal (2-Step Flow)
-  openWelcomeStateModal(step = 1) {
+  // Welcome / Onboarding State Selection Modal (Direct & Fast)
+  openWelcomeStateModal() {
     deviceEngine.haptic('selection');
     const modal = document.getElementById('modal-welcome-state');
     if (!modal) return;
 
-    const step1 = document.getElementById('welcome-step-1');
-    const step2 = document.getElementById('welcome-step-2');
-
-    if (step === 1) {
-      if (step1) step1.style.display = 'block';
-      if (step2) step2.style.display = 'none';
-      this.renderWelcomeStatesGrid();
-      setTimeout(() => {
-        document.getElementById('input-search-state')?.focus();
-      }, 200);
-    } else {
-      if (step1) step1.style.display = 'none';
-      if (step2) step2.style.display = 'block';
-      const stateObj = this.states.find(s => s.uf === this.pendingSelectedUf);
-      const stateName = stateObj ? stateObj.nome : this.pendingSelectedUf;
-      const label = document.getElementById('welcome-mode-selected-state-text');
-      if (label) {
-        label.innerHTML = `Estado selecionado: <strong>${stateName} (${this.pendingSelectedUf})</strong>`;
-      }
-    }
-
+    this.renderWelcomeStatesGrid();
     modal.classList.add('open');
+
+    setTimeout(() => {
+      document.getElementById('input-search-state')?.focus();
+    }, 200);
   }
 
   closeWelcomeStateModal() {
@@ -372,36 +356,11 @@ class App {
     if (modal) modal.classList.remove('open');
   }
 
-  selectStateOnboarding(uf) {
-    deviceEngine.haptic('selection');
-    this.pendingSelectedUf = uf;
-    this.openWelcomeStateModal(2);
-  }
-
-  async chooseModeWeb() {
+  async selectStateDirect(uf) {
     deviceEngine.haptic('confirm');
     localStorage.setItem('cola_2026_uf_chosen', 'true');
-    await this.loadStateData(this.pendingSelectedUf, true);
+    await this.loadStateData(uf, true);
     this.closeWelcomeStateModal();
-    this.setQuickModeButtons('web');
-  }
-
-  async chooseModeUrna() {
-    deviceEngine.haptic('confirm');
-    localStorage.setItem('cola_2026_uf_chosen', 'true');
-    await this.loadStateData(this.pendingSelectedUf, true);
-    this.closeWelcomeStateModal();
-    this.setQuickModeButtons('urna');
-    setTimeout(() => {
-      this.urnaSimulator.open(true);
-    }, 200);
-  }
-
-  setQuickModeButtons(mode) {
-    const btnWeb = document.getElementById('btn-quick-web');
-    const btnUrna = document.getElementById('btn-quick-urna');
-    if (btnWeb) btnWeb.classList.toggle('active', mode === 'web');
-    if (btnUrna) btnUrna.classList.toggle('active', mode === 'urna');
   }
 
   renderWelcomeStatesGrid() {
@@ -427,7 +386,7 @@ class App {
     container.innerHTML = '';
     filtered.forEach(s => {
       const card = document.createElement('div');
-      card.className = `state-card-picker ${s.uf === (this.pendingSelectedUf || this.currentUf) ? 'active' : ''}`;
+      card.className = `state-card-picker ${s.uf === this.currentUf ? 'active' : ''}`;
       const stateReg = STATE_REGIONS[s.uf] || '';
 
       card.innerHTML = `
@@ -442,7 +401,7 @@ class App {
       `;
 
       card.addEventListener('click', () => {
-        this.selectStateOnboarding(s.uf);
+        this.selectStateDirect(s.uf);
       });
 
       container.appendChild(card);
@@ -1033,48 +992,14 @@ class App {
       }
     });
 
-    // Quick Mode Switcher in State Bar
-    document.getElementById('btn-quick-web')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
-      this.setQuickModeButtons('web');
-      this.urnaSimulator.close();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    document.getElementById('btn-quick-urna')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
-      this.setQuickModeButtons('urna');
-      this.urnaSimulator.open(true);
-    });
-
-    // Fast State Badges in Welcome Modal (Step 1 -> Step 2)
+    // Fast State Badges in Welcome Modal (1-Tap Direct Selection)
     document.querySelectorAll('.chip-uf-fast').forEach(chip => {
       chip.addEventListener('click', () => {
         const uf = chip.getAttribute('data-uf');
         if (uf) {
-          this.selectStateOnboarding(uf);
+          this.selectStateDirect(uf);
         }
       });
-    });
-
-    // Welcome Step 2 Mode Selection Buttons
-    document.getElementById('btn-choose-mode-web')?.addEventListener('click', () => {
-      this.chooseModeWeb();
-    });
-
-    document.getElementById('btn-choose-mode-urna')?.addEventListener('click', () => {
-      this.chooseModeUrna();
-    });
-
-    document.getElementById('btn-back-to-step1')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
-      this.openWelcomeStateModal(1);
-    });
-
-    document.getElementById('btn-urna-switch-to-web')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
-      this.urnaSimulator.close();
-      this.setQuickModeButtons('web');
     });
 
     // Completion Hub Buttons
