@@ -1,7 +1,8 @@
 // ==========================================================================
-// COLA ELEITORAL 2026 - MAIN APPLICATION LOGIC (100% FLUID MOBILE FLOW)
+// COLA ELEITORAL 2026 - MAIN APPLICATION LOGIC (ADVANCED ANDROID & iOS ENGINE)
 // ==========================================================================
 
+import { deviceEngine } from './device.js';
 import { UrnaSimulator } from './urna.js';
 import { 
   formatWhatsAppMessage, 
@@ -56,6 +57,9 @@ class App {
     this.currentFlyerFormat = 'stories'; // 'stories' | 'post' | 'square'
     this.urnaSimulator = null;
 
+    this.touchStartX = 0;
+    this.touchStartY = 0;
+
     this.init();
   }
 
@@ -98,9 +102,10 @@ class App {
     this.initTheme();
     await this.loadInitialData();
     this.setupEventListeners();
+    this.setupTouchSwipeGestures();
     this.urnaSimulator = new UrnaSimulator(this);
     
-    // Set initial flow mode
+    // Set initial flow mode based on screen profiling
     this.setFlowMode(this.flowMode);
 
     // Check if user should be asked for the state on startup
@@ -123,6 +128,7 @@ class App {
   }
 
   toggleTheme() {
+    deviceEngine.haptic('selection');
     const current = document.documentElement.getAttribute('data-theme') || 'dark';
     const next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
@@ -134,9 +140,10 @@ class App {
   }
 
   // ==========================================================================
-  // FLUID MOBILE STEP FLOW & NAVIGATION CAROUSEL
+  // FLUID MOBILE STEP FLOW & TOUCH GESTURES (iOS / ANDROID)
   // ==========================================================================
   setFlowMode(mode) {
+    deviceEngine.haptic('selection');
     this.flowMode = mode;
     const container = document.getElementById('voting-cards-container');
     const btnStep = document.getElementById('btn-mode-step');
@@ -163,6 +170,7 @@ class App {
 
   goToStep(stepIndex, shouldScroll = true) {
     if (stepIndex < 0 || stepIndex >= CARGO_ORDER.length) return;
+    deviceEngine.haptic('step');
     this.currentStepIndex = stepIndex;
     const cargoKey = CARGO_ORDER[stepIndex];
 
@@ -180,7 +188,6 @@ class App {
       if (pill) {
         pill.classList.toggle('active', idx === stepIndex);
         if (idx === stepIndex) {
-          // Scroll pill into view smoothly inside carousel
           pill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
       }
@@ -201,7 +208,7 @@ class App {
     if (shouldScroll) {
       const card = document.getElementById(`card-${cargoKey}`);
       if (card) {
-        const headerOffset = 130;
+        const headerOffset = window.innerWidth <= 768 ? 120 : 130;
         const elementPosition = card.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
@@ -212,23 +219,56 @@ class App {
   goToCargo(cargoKey) {
     const idx = CARGO_ORDER.indexOf(cargoKey);
     if (idx !== -1) {
-      if ('vibrate' in navigator) navigator.vibrate(25);
       if (this.flowMode === 'step') {
         this.goToStep(idx, true);
       } else {
+        deviceEngine.haptic('selection');
         const card = document.getElementById(`card-${cargoKey}`);
         if (card) {
-          const headerOffset = 130;
+          const headerOffset = window.innerWidth <= 768 ? 120 : 130;
           const elementPosition = card.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
           window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
         }
-        // Highlight active pill
         CARGO_ORDER.forEach(k => {
           document.getElementById(`navpill-${k}`)?.classList.toggle('active', k === cargoKey);
         });
       }
     }
+  }
+
+  setupTouchSwipeGestures() {
+    const container = document.getElementById('voting-cards-container');
+    if (!container) return;
+
+    container.addEventListener('touchstart', (e) => {
+      this.touchStartX = e.changedTouches[0].screenX;
+      this.touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+      if (this.flowMode !== 'step') return;
+
+      const touchEndX = e.changedTouches[0].screenX;
+      const touchEndY = e.changedTouches[0].screenY;
+      const deltaX = touchEndX - this.touchStartX;
+      const deltaY = touchEndY - this.touchStartY;
+
+      // Ensure horizontal swipe is dominant over vertical scroll
+      if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+        if (deltaX < 0) {
+          // Swipe Left -> Next Cargo
+          if (this.currentStepIndex < CARGO_ORDER.length - 1) {
+            this.goToStep(this.currentStepIndex + 1, false);
+          }
+        } else {
+          // Swipe Right -> Previous Cargo
+          if (this.currentStepIndex > 0) {
+            this.goToStep(this.currentStepIndex - 1, false);
+          }
+        }
+      }
+    }, { passive: true });
   }
 
   async loadInitialData() {
@@ -288,7 +328,7 @@ class App {
       this.updateProgressSummary();
 
       if (notify) {
-        this.showToast(`Estado selecionado: ${stateName} (${uf}) • Candidatos carregados!`, "success");
+        this.showToast(`Estado: ${stateName} (${uf}) • Candidatos carregados!`, "success");
       }
     } catch (e) {
       console.error(`Error loading state data for ${uf}:`, e);
@@ -298,6 +338,7 @@ class App {
 
   // Welcome / Onboarding State Picker Modal
   openWelcomeStateModal() {
+    deviceEngine.haptic('selection');
     const modal = document.getElementById('modal-welcome-state');
     if (!modal) return;
 
@@ -352,7 +393,7 @@ class App {
       `;
 
       card.addEventListener('click', async () => {
-        if ('vibrate' in navigator) navigator.vibrate(30);
+        deviceEngine.haptic('confirm');
         localStorage.setItem('cola_2026_uf_chosen', 'true');
         await this.loadStateData(s.uf, true);
         this.closeWelcomeStateModal();
@@ -366,7 +407,7 @@ class App {
   // POSTAR PANFLETO NAS REDES SOCIAIS (X, INSTAGRAM, WHATSAPP <= 140 CHARACTERS)
   // ==========================================================================
   openPostSocialModal() {
-    if ('vibrate' in navigator) navigator.vibrate(35);
+    deviceEngine.haptic('selection');
     const modal = document.getElementById('modal-post-social');
     const textarea = document.getElementById('social-post-textarea');
     const counter = document.getElementById('post-char-counter');
@@ -406,7 +447,7 @@ class App {
   // DIGITAL FLYER / IMPRESSÃO DIGITAL MODAL (SOCIAL MEDIA & HD CANVAS)
   // ==========================================================================
   async openDigitalFlyerModal(format = 'stories') {
-    if ('vibrate' in navigator) navigator.vibrate(35);
+    deviceEngine.haptic('selection');
     this.currentFlyerFormat = format;
 
     const modal = document.getElementById('modal-digital-flyer');
@@ -561,7 +602,7 @@ class App {
       `;
 
       item.addEventListener('click', () => {
-        if ('vibrate' in navigator) navigator.vibrate(30);
+        deviceEngine.haptic('selection');
         this.selectCandidate(cargoKey, cand);
         dropdown.classList.remove('open');
         const input = document.getElementById(`input-search-${cargoKey}`);
@@ -576,14 +617,17 @@ class App {
 
   selectCandidate(cargoKey, candidate) {
     if (cargoKey === 'senador1' && this.selections.senador2?.sq === candidate.sq) {
+      deviceEngine.haptic('warning');
       this.showToast("Atenção: Você não pode votar no mesmo senador para as duas vagas!", "warn");
       return;
     }
     if (cargoKey === 'senador2' && this.selections.senador1?.sq === candidate.sq) {
+      deviceEngine.haptic('warning');
       this.showToast("Atenção: Você não pode votar no mesmo senador para as duas vagas!", "warn");
       return;
     }
 
+    deviceEngine.haptic('confirm');
     this.selections[cargoKey] = candidate;
     this.saveSelections();
     this.renderCard(cargoKey);
@@ -614,6 +658,7 @@ class App {
       sel.foto = '';
     }
 
+    deviceEngine.haptic('selection');
     this.selections[cargoKey] = sel;
     this.saveSelections();
     this.renderCard(cargoKey);
@@ -630,6 +675,7 @@ class App {
   }
 
   clearSelection(cargoKey) {
+    deviceEngine.haptic('selection');
     this.selections[cargoKey] = null;
     this.saveSelections();
     this.renderCard(cargoKey);
@@ -638,6 +684,7 @@ class App {
 
   clearAllSelections() {
     if (confirm("Deseja realmente limpar toda a sua cola eleitoral?")) {
+      deviceEngine.haptic('warning');
       this.selections = {
         deputadoFederal: null,
         deputadoEstadual: null,
@@ -763,6 +810,7 @@ class App {
 
   // Candidate Explorer Modal
   openExplorer(cargoKey) {
+    deviceEngine.haptic('selection');
     this.explorerCargoKey = cargoKey;
     const modal = document.getElementById('modal-explorer');
     const title = document.getElementById('explorer-modal-title');
@@ -841,7 +889,7 @@ class App {
       `;
 
       card.addEventListener('click', () => {
-        if ('vibrate' in navigator) navigator.vibrate(30);
+        deviceEngine.haptic('confirm');
         this.selectCandidate(this.explorerCargoKey, cand);
         this.closeExplorer();
       });
@@ -868,7 +916,7 @@ class App {
 
   // Handle direct image download
   async handleSavePhoto() {
-    if ('vibrate' in navigator) navigator.vibrate(40);
+    deviceEngine.haptic('confirm');
     this.showToast("📸 Gerando imagem do panfleto em alta resolução...", "info");
 
     try {
@@ -909,7 +957,21 @@ class App {
 
     // Finish Step button
     document.getElementById('btn-step-finish')?.addEventListener('click', () => {
+      deviceEngine.haptic('confirm');
       this.openDigitalFlyerModal('stories');
+    });
+
+    // Fast State Badges in Welcome Modal
+    document.querySelectorAll('.chip-uf-fast').forEach(chip => {
+      chip.addEventListener('click', async () => {
+        const uf = chip.getAttribute('data-uf');
+        if (uf) {
+          deviceEngine.haptic('confirm');
+          localStorage.setItem('cola_2026_uf_chosen', 'true');
+          await this.loadStateData(uf, true);
+          this.closeWelcomeStateModal();
+        }
+      });
     });
 
     // Post Social Modal Buttons (Header, Bottom toolbar, Mobile bottom nav)
@@ -925,6 +987,7 @@ class App {
 
     // Copy formatted <=140 text
     document.getElementById('btn-copy-post-text')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
       const text = document.getElementById('social-post-textarea')?.value || '';
       copyToClipboard(text).then(() => {
         this.showToast("📋 Texto copiado com sucesso (<=140 caracteres)!", "success");
@@ -933,7 +996,7 @@ class App {
 
     // Instagram share action from Post Modal
     document.getElementById('btn-share-ig-direct')?.addEventListener('click', async () => {
-      if ('vibrate' in navigator) navigator.vibrate(35);
+      deviceEngine.haptic('confirm');
       const text = document.getElementById('social-post-textarea')?.value || '';
       await copyToClipboard(text);
       this.showToast("📋 Legenda copiada! Baixando panfleto para o Instagram...", "info");
@@ -962,7 +1025,7 @@ class App {
     if (flyerTabs) {
       flyerTabs.querySelectorAll('.flyer-tab-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          if ('vibrate' in navigator) navigator.vibrate(25);
+          deviceEngine.haptic('selection');
           flyerTabs.querySelectorAll('.flyer-tab-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           this.currentFlyerFormat = btn.getAttribute('data-format') || 'stories';
@@ -973,7 +1036,7 @@ class App {
 
     // Actions inside Digital Flyer Modal
     document.getElementById('btn-flyer-share')?.addEventListener('click', async () => {
-      if ('vibrate' in navigator) navigator.vibrate(35);
+      deviceEngine.haptic('confirm');
       const stateObj = this.states.find(s => s.uf === this.currentUf);
       const stateName = stateObj ? stateObj.nome : this.currentUf;
       this.showToast("📲 Abrindo compartilhamento nas redes sociais...", "info");
@@ -983,7 +1046,7 @@ class App {
     document.getElementById('btn-flyer-download')?.addEventListener('click', () => this.handleSavePhoto());
 
     document.getElementById('btn-flyer-copy')?.addEventListener('click', async () => {
-      if ('vibrate' in navigator) navigator.vibrate(35);
+      deviceEngine.haptic('selection');
       const stateObj = this.states.find(s => s.uf === this.currentUf);
       const stateName = stateObj ? stateObj.nome : this.currentUf;
       try {
@@ -995,6 +1058,7 @@ class App {
     });
 
     document.getElementById('btn-flyer-print')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
       this.preparePrintLayout();
       window.print();
     });
@@ -1005,11 +1069,11 @@ class App {
 
     // Mobile Bottom Bar Actions
     document.getElementById('btn-mobile-urna')?.addEventListener('click', () => {
-      if ('vibrate' in navigator) navigator.vibrate(30);
+      deviceEngine.haptic('selection');
       this.urnaSimulator.open(true);
     });
     document.getElementById('btn-mobile-state')?.addEventListener('click', () => {
-      if ('vibrate' in navigator) navigator.vibrate(30);
+      deviceEngine.haptic('selection');
       this.openWelcomeStateModal();
     });
 
@@ -1021,6 +1085,7 @@ class App {
     if (regionTabs) {
       regionTabs.querySelectorAll('.region-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+          deviceEngine.haptic('selection');
           regionTabs.querySelectorAll('.region-tab-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           this.currentRegionFilter = btn.getAttribute('data-region') || 'TODOS';
@@ -1045,6 +1110,7 @@ class App {
     document.getElementById('explorer-party-filter')?.addEventListener('change', () => this.filterExplorer());
 
     document.getElementById('btn-open-urna')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
       this.urnaSimulator.open(true);
     });
     document.getElementById('btn-close-urna')?.addEventListener('click', () => {

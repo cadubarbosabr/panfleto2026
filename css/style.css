@@ -506,6 +506,53 @@ body {
   font-weight: 600;
 }
 
+/* Fast Access State Chips (1-Tap Selection) */
+.fast-states-row {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fast-states-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--accent-emerald);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fast-states-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  max-width: 520px;
+}
+
+.chip-uf-fast {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chip-uf-fast:hover, .chip-uf-fast:active {
+  background: var(--accent-emerald);
+  color: #ffffff;
+  border-color: var(--accent-emerald);
+  transform: scale(1.06);
+  box-shadow: 0 2px 10px var(--accent-emerald-glow);
+}
+
 /* Region Filter Tabs */
 .region-tabs-bar {
   padding: 0.85rem 2rem;
