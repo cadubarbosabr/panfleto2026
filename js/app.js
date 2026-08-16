@@ -14,7 +14,8 @@ import {
   shareFlyerOnSocial,
   generateSocialPostText,
   getXPostUrl,
-  getWhatsAppShareUrl
+  getWhatsAppShareUrl,
+  getFacebookShareUrl
 } from './export.js';
 
 const CARGO_ORDER = [
@@ -59,6 +60,7 @@ class App {
     this.explorerCargoKey = null;
     this.currentRegionFilter = 'TODOS';
     this.currentFlyerFormat = 'stories'; // 'stories' | 'post' | 'square'
+    this.userHasEditedText = false;
     this.urnaSimulator = null;
 
     this.touchStartX = 0;
@@ -412,21 +414,21 @@ class App {
   }
 
   // ==========================================================================
-  // POSTAR PANFLETO NAS REDES SOCIAIS (X, INSTAGRAM, WHATSAPP <= 140 CHARACTERS)
+  // FINAL PAGE SECTION (LIVE HD PHOTO PREVIEW & EDITABLE SOCIAL POST BOX)
   // ==========================================================================
-  openPostSocialModal() {
-    deviceEngine.haptic('selection');
-    const modal = document.getElementById('modal-post-social');
+  updateSocialPostBox() {
     const textarea = document.getElementById('social-post-textarea');
     const counter = document.getElementById('post-char-counter');
     const linkX = document.getElementById('btn-share-x');
     const linkWA = document.getElementById('btn-share-wa-direct');
+    const linkFB = document.getElementById('btn-share-fb-direct');
 
-    if (!modal || !textarea) return;
+    if (!textarea) return;
 
-    // Generate simple social post text <= 140 chars: Cargo | Nome | Numero + CTA
-    const initialText = generateSocialPostText(this.currentUf, this.selections);
-    textarea.value = initialText;
+    if (!this.userHasEditedText) {
+      const initialText = generateSocialPostText(this.currentUf, this.selections);
+      textarea.value = initialText;
+    }
 
     const updateSocialLinks = (text) => {
       const len = text.length;
@@ -436,53 +438,19 @@ class App {
       }
       if (linkX) linkX.href = getXPostUrl(text);
       if (linkWA) linkWA.href = getWhatsAppShareUrl(text);
+      if (linkFB) linkFB.href = getFacebookShareUrl(text);
     };
 
-    updateSocialLinks(initialText);
-
-    // Live typing listener
-    textarea.oninput = () => updateSocialLinks(textarea.value);
-
-    modal.classList.add('open');
-  }
-
-  closePostSocialModal() {
-    const modal = document.getElementById('modal-post-social');
-    if (modal) modal.classList.remove('open');
-  }
-
-  // ==========================================================================
-  // DIGITAL FLYER / IMPRESSÃO DIGITAL MODAL (SOCIAL MEDIA & HD CANVAS)
-  // ==========================================================================
-  async openDigitalFlyerModal(format = 'stories') {
-    deviceEngine.haptic('selection');
-    this.currentFlyerFormat = format;
-
-    const modal = document.getElementById('modal-digital-flyer');
-    if (!modal) return;
-
-    modal.classList.add('open');
-
-    const tabs = document.getElementById('flyer-format-tabs');
-    if (tabs) {
-      tabs.querySelectorAll('.flyer-tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-format') === format);
-      });
-    }
-
-    await this.renderDigitalFlyerPreview();
-  }
-
-  closeDigitalFlyerModal() {
-    const modal = document.getElementById('modal-digital-flyer');
-    if (modal) modal.classList.remove('open');
+    updateSocialLinks(textarea.value);
+    textarea.oninput = () => {
+      this.userHasEditedText = true;
+      updateSocialLinks(textarea.value);
+    };
   }
 
   async renderDigitalFlyerPreview() {
     const previewContainer = document.getElementById('flyer-preview-container');
     if (!previewContainer) return;
-
-    previewContainer.innerHTML = '<div style="color: #10b981; font-weight: 700; padding: 40px; text-align: center;">⏳ Renderizando Panfleto Digital em HD...</div>';
 
     const stateObj = this.states.find(s => s.uf === this.currentUf);
     const stateName = stateObj ? stateObj.nome : this.currentUf;
@@ -491,6 +459,8 @@ class App {
     
     previewContainer.innerHTML = '';
     previewContainer.appendChild(canvas);
+
+    this.updateSocialPostBox();
   }
 
   getCandidateListForCargo(cargoKey) {
@@ -717,6 +687,7 @@ class App {
   clearAllSelections() {
     if (confirm("Deseja iniciar um novo panfleto? Suas escolhas atuais serão reiniciadas para você montar uma nova cola 😊")) {
       deviceEngine.haptic('confirm');
+      this.userHasEditedText = false;
       this.selections = {
         deputadoFederal: null,
         deputadoEstadual: null,
@@ -791,7 +762,7 @@ class App {
           photoImg.onerror = () => { photoImg.src = FALLBACK_PHOTO; };
         }
 
-        document.getElementById(`btn-remove-${cargoKey}`)?.addEventListener('click', (e) => {
+        previewEl.querySelector(`#btn-remove-${cargoKey}`)?.addEventListener('click', (e) => {
           e.stopPropagation();
           this.clearSelection(cargoKey);
         });
@@ -811,6 +782,9 @@ class App {
         `;
       }
     }
+
+    this.updateProgressSummary();
+    this.renderDigitalFlyerPreview();
   }
 
   renderAllCards() {
@@ -1011,8 +985,7 @@ class App {
         const elementPosition = elementRect - bodyRect;
         const offsetPosition = elementPosition - offset;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-      } else {
-        this.openDigitalFlyerModal('stories');
+        this.renderDigitalFlyerPreview();
       }
     });
 
@@ -1026,89 +999,7 @@ class App {
       });
     });
 
-    // Completion Hub Buttons
-    document.getElementById('btn-open-postar-bottom')?.addEventListener('click', () => this.openPostSocialModal());
-    document.getElementById('btn-open-flyer-bottom')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
-    document.getElementById('btn-open-urna-bottom')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
-      this.urnaSimulator.open(true);
-    });
-    document.getElementById('btn-save-photo-bottom')?.addEventListener('click', () => this.handleSavePhoto());
-
-    // Post Social Modal Buttons
-    document.getElementById('btn-open-postar')?.addEventListener('click', () => this.openPostSocialModal());
-    document.getElementById('btn-mobile-postar')?.addEventListener('click', () => this.openPostSocialModal());
-
-    // Close Post Social Modal
-    document.getElementById('btn-close-post-social')?.addEventListener('click', () => this.closePostSocialModal());
-    document.getElementById('modal-post-social')?.addEventListener('click', (e) => {
-      if (e.target.id === 'modal-post-social') this.closePostSocialModal();
-    });
-
-    // Copy formatted <=140 text
-    document.getElementById('btn-copy-post-text')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
-      const text = document.getElementById('social-post-textarea')?.value || '';
-      copyToClipboard(text).then(() => {
-        this.showToast("📋 Texto copiado com sucesso (<=140 caracteres)!", "success");
-      });
-    });
-
-    // WhatsApp share action from Post Modal (Attaches photo via Web Share or copies image)
-    document.getElementById('btn-share-wa-direct')?.addEventListener('click', async (e) => {
-      const stateObj = this.states.find(s => s.uf === this.currentUf);
-      const stateName = stateObj ? stateObj.nome : this.currentUf;
-
-      if (navigator.share && navigator.canShare) {
-        e.preventDefault();
-        deviceEngine.haptic('confirm');
-        this.showToast("📲 Abrindo compartilhamento com foto no WhatsApp...", "info");
-        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, 'stories');
-      } else {
-        // Desktop WhatsApp Web fallback
-        deviceEngine.haptic('selection');
-        try {
-          await copyFlyerImageToClipboard(stateName, this.currentUf, this.selections, 'stories');
-          this.showToast("📋 Imagem do panfleto copiada! Cole (Ctrl+V) no WhatsApp.", "success");
-        } catch (err) {}
-      }
-    });
-
-    // Instagram share action from Post Modal
-    document.getElementById('btn-share-ig-direct')?.addEventListener('click', async (e) => {
-      deviceEngine.haptic('confirm');
-      const stateObj = this.states.find(s => s.uf === this.currentUf);
-      const stateName = stateObj ? stateObj.nome : this.currentUf;
-
-      if (navigator.share && navigator.canShare) {
-        this.showToast("📸 Compartilhando foto no Instagram...", "info");
-        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, 'stories');
-      } else {
-        const text = document.getElementById('social-post-textarea')?.value || '';
-        await copyToClipboard(text);
-        this.showToast("📋 Legenda copiada! Abrindo foto e Instagram...", "info");
-        await this.handleSavePhoto();
-        setTimeout(() => {
-          window.open('https://www.instagram.com/', '_blank');
-        }, 800);
-      }
-    });
-
-    // Download flyer directly from Post Modal
-    document.getElementById('btn-download-flyer-from-post')?.addEventListener('click', () => this.handleSavePhoto());
-
-    // Open Digital Flyer Modal Buttons
-    document.getElementById('btn-open-flyer')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
-    document.getElementById('btn-open-flyer-bottom')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
-    document.getElementById('btn-mobile-flyer')?.addEventListener('click', () => this.openDigitalFlyerModal('stories'));
-
-    // Digital Flyer Modal Events
-    document.getElementById('btn-close-flyer')?.addEventListener('click', () => this.closeDigitalFlyerModal());
-    document.getElementById('modal-digital-flyer')?.addEventListener('click', (e) => {
-      if (e.target.id === 'modal-digital-flyer') this.closeDigitalFlyerModal();
-    });
-
-    // Flyer Format Tabs Switcher
+    // Final Page: Flyer Format Tabs Switcher (Stories 9:16, Post 4:5, Square 1:1)
     const flyerTabs = document.getElementById('flyer-format-tabs');
     if (flyerTabs) {
       flyerTabs.querySelectorAll('.flyer-tab-btn').forEach(btn => {
@@ -1122,38 +1013,87 @@ class App {
       });
     }
 
-    // Actions inside Digital Flyer Modal
-    document.getElementById('btn-flyer-share')?.addEventListener('click', async () => {
-      deviceEngine.haptic('confirm');
-      const stateObj = this.states.find(s => s.uf === this.currentUf);
-      const stateName = stateObj ? stateObj.nome : this.currentUf;
-      this.showToast("📲 Abrindo compartilhamento nas redes sociais...", "info");
-      await shareFlyerOnSocial(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
+    // Hero Action: Baixar Foto (Abre em nova aba / salva na galeria)
+    document.getElementById('btn-save-photo-bottom')?.addEventListener('click', () => this.handleSavePhoto());
+
+    // Explicit Sharing Buttons:
+    // 1. 𝕏 Twitter
+    document.getElementById('btn-share-x')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
     });
 
-    document.getElementById('btn-flyer-download')?.addEventListener('click', () => this.handleSavePhoto());
-
-    document.getElementById('btn-flyer-copy')?.addEventListener('click', async () => {
-      deviceEngine.haptic('selection');
+    // 2. 💬 WhatsApp
+    document.getElementById('btn-share-wa-direct')?.addEventListener('click', async (e) => {
       const stateObj = this.states.find(s => s.uf === this.currentUf);
       const stateName = stateObj ? stateObj.nome : this.currentUf;
-      try {
-        await copyFlyerImageToClipboard(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
-        this.showToast("📋 Imagem copiada! Basta colar (Ctrl+V) no WhatsApp ou rede social.", "success");
-      } catch (err) {
-        this.showToast("Dica: Use o botão 'Baixar Imagem' para salvar no seu aparelho.", "info");
+
+      if (navigator.share && navigator.canShare) {
+        e.preventDefault();
+        deviceEngine.haptic('confirm');
+        this.showToast("📲 Compartilhando com foto no WhatsApp...", "info");
+        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
+      } else {
+        deviceEngine.haptic('selection');
+        try {
+          await copyFlyerImageToClipboard(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
+          this.showToast("📋 Imagem do panfleto copiada! Cole (Ctrl+V) no WhatsApp.", "success");
+        } catch (err) {}
       }
     });
 
-    document.getElementById('btn-flyer-print')?.addEventListener('click', () => {
-      deviceEngine.haptic('selection');
-      this.preparePrintLayout();
-      window.print();
+    // 3. 📸 Instagram
+    document.getElementById('btn-share-ig-direct')?.addEventListener('click', async () => {
+      deviceEngine.haptic('confirm');
+      const stateObj = this.states.find(s => s.uf === this.currentUf);
+      const stateName = stateObj ? stateObj.nome : this.currentUf;
+
+      if (navigator.share && navigator.canShare) {
+        this.showToast("📸 Compartilhando foto no Instagram...", "info");
+        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
+      } else {
+        const text = document.getElementById('social-post-textarea')?.value || '';
+        await copyToClipboard(text);
+        this.showToast("📋 Legenda copiada! Abrindo foto e Instagram...", "info");
+        await this.handleSavePhoto();
+        setTimeout(() => {
+          window.open('https://www.instagram.com/', '_blank');
+        }, 800);
+      }
     });
 
-    // Direct Save Photo Button
-    document.getElementById('btn-save-photo')?.addEventListener('click', () => this.handleSavePhoto());
-    document.getElementById('btn-save-photo-bottom')?.addEventListener('click', () => this.handleSavePhoto());
+    // 4. 🔵 Facebook
+    document.getElementById('btn-share-fb-direct')?.addEventListener('click', async (e) => {
+      const stateObj = this.states.find(s => s.uf === this.currentUf);
+      const stateName = stateObj ? stateObj.nome : this.currentUf;
+
+      if (navigator.share && navigator.canShare) {
+        e.preventDefault();
+        deviceEngine.haptic('confirm');
+        this.showToast("🔵 Compartilhando com foto no Facebook...", "info");
+        await shareFlyerOnSocial(stateName, this.currentUf, this.selections, this.currentFlyerFormat);
+      } else {
+        deviceEngine.haptic('selection');
+      }
+    });
+
+    // Mobile Bottom Floating Bar Actions
+    document.getElementById('btn-mobile-postar')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
+      const completionHub = document.getElementById('flyer-completion-section');
+      if (completionHub) {
+        completionHub.scrollIntoView({ behavior: 'smooth' });
+        this.renderDigitalFlyerPreview();
+      }
+    });
+
+    document.getElementById('btn-mobile-flyer')?.addEventListener('click', () => {
+      deviceEngine.haptic('selection');
+      const completionHub = document.getElementById('flyer-completion-section');
+      if (completionHub) {
+        completionHub.scrollIntoView({ behavior: 'smooth' });
+        this.renderDigitalFlyerPreview();
+      }
+    });
 
     // Mobile Bottom Bar Actions
     document.getElementById('btn-mobile-urna')?.addEventListener('click', () => {

@@ -452,58 +452,94 @@
     </div>
 
     <!-- ==========================================================================
-         COMPLETION & SHARING ACTIONS (FINAL DA CRIAÇÃO DO PANFLETO)
+         COMPLETION & SHARING SECTION (FINAL DA CRIAÇÃO DO PANFLETO)
          ========================================================================== -->
     <section class="flyer-completion-hub" id="flyer-completion-section">
       <div class="completion-header">
-        <div class="completion-badge">🚀 Panfleto Eleitoral 2026</div>
-        <h3 id="completion-title">Seu Panfleto está Pronto!</h3>
-        <p id="completion-subtitle">Compartilhe nas redes sociais, baixe a foto ou simule sua votação na urna eletrônica</p>
-        <div class="completion-progress-tag" id="progress-counter">0 de 6 votos definidos</div>
+        <div class="completion-badge">🚀 Panfleto Pronto</div>
+        <h3 id="completion-title">Sua Cola Eleitoral 2026</h3>
+        <p id="completion-subtitle">Baixe a foto oficial para levar no dia da votação ou compartilhe nas redes</p>
       </div>
 
-      <div class="completion-actions-grid">
-        <!-- 1. HERO ACTION: Baixar Foto do Panfleto (Salvar na Galeria) -->
-        <button class="btn-completion-hero" id="btn-save-photo-bottom">
+      <!-- Format selector tabs for the Live Photo (Stories, Post, Square) -->
+      <div class="final-photo-format-tabs" id="flyer-format-tabs">
+        <button class="flyer-tab-btn active" data-format="stories">📱 Stories (9:16)</button>
+        <button class="flyer-tab-btn" data-format="post">🖼️ Post / Feed (4:5)</button>
+        <button class="flyer-tab-btn" data-format="square">📄 Quadrado (1:1)</button>
+      </div>
+
+      <!-- 1. A FOTO DO PANFLETO EM DESTAQUE -->
+      <div class="final-flyer-display">
+        <div class="final-flyer-canvas-wrapper" id="flyer-preview-container">
+          <!-- Canvas renderizado em tempo real -->
+        </div>
+      </div>
+
+      <!-- 2. BOTÃO DE DESTAQUE: BAIXAR FOTO -->
+      <div class="final-download-hero-wrapper">
+        <button class="btn-final-download-hero" id="btn-save-photo-bottom">
           <span class="btn-hero-icon">💾</span>
           <div class="btn-hero-text">
             <strong>Baixar Foto do Panfleto</strong>
-            <small>Salvar foto em alta resolução na galeria do seu celular</small>
-          </div>
-        </button>
-
-        <!-- 2. Postar nas Redes Sociais -->
-        <button class="btn-completion-card" id="btn-open-postar-bottom">
-          <span class="btn-card-icon">📢</span>
-          <div class="btn-card-text">
-            <strong>Postar nas Redes</strong>
-            <small>Compartilhar no X, WhatsApp e Instagram</small>
-          </div>
-        </button>
-
-        <!-- 3. Panfleto Digital -->
-        <button class="btn-completion-card" id="btn-open-flyer-bottom">
-          <span class="btn-card-icon">📱</span>
-          <div class="btn-card-text">
-            <strong>Ver Panfleto Digital</strong>
-            <small>Stories (9:16), Feed (4:5) e Quadrado</small>
-          </div>
-        </button>
-
-        <!-- 4. Simulador da Urna -->
-        <button class="btn-completion-card btn-card-urna" id="btn-open-urna-bottom">
-          <span class="btn-card-icon">🗳️</span>
-          <div class="btn-card-text">
-            <strong>Simular na Urna</strong>
-            <small>Treine no modelo oficial do TSE</small>
+            <small>Abre a foto em alta resolução para salvar na galeria do celular</small>
           </div>
         </button>
       </div>
 
-      <!-- Secondary action: Fazer novo panfleto -->
+      <!-- 3. TEXTO EDITÁVEL ANTES DO POST -->
+      <div class="final-post-text-box">
+        <div class="final-post-label-row">
+          <label for="social-post-textarea">
+            <span>✍️ Texto para o post nas redes:</span>
+          </label>
+          <span class="char-counter" id="post-char-counter">0 / 140 caracteres</span>
+        </div>
+        <textarea id="social-post-textarea" rows="2" maxlength="140" placeholder="Gerando texto da sua cola..."></textarea>
+      </div>
+
+      <!-- 4. BOTÕES EXPLÍCITOS DE COMPARTILHAMENTO (X, INSTAGRAM, WHATSAPP, FACEBOOK) -->
+      <div class="final-explicit-shares-grid">
+        <!-- 𝕏 Twitter -->
+        <a class="btn-explicit-share btn-share-x" id="btn-share-x" target="_blank" rel="noopener noreferrer">
+          <span class="explicit-share-icon">𝕏</span>
+          <div class="explicit-share-info">
+            <strong>Postar no 𝕏</strong>
+            <small>Twitter</small>
+          </div>
+        </a>
+
+        <!-- 💬 WhatsApp -->
+        <a class="btn-explicit-share btn-share-wa" id="btn-share-wa-direct" target="_blank" rel="noopener noreferrer">
+          <span class="explicit-share-icon">💬</span>
+          <div class="explicit-share-info">
+            <strong>WhatsApp</strong>
+            <small>Conversas e Status</small>
+          </div>
+        </a>
+
+        <!-- 📸 Instagram -->
+        <button class="btn-explicit-share btn-share-ig" id="btn-share-ig-direct">
+          <span class="explicit-share-icon">📸</span>
+          <div class="explicit-share-info">
+            <strong>Instagram</strong>
+            <small>Stories e Feed</small>
+          </div>
+        </button>
+
+        <!-- 🔵 Facebook -->
+        <a class="btn-explicit-share btn-share-fb" id="btn-share-fb-direct" target="_blank" rel="noopener noreferrer">
+          <span class="explicit-share-icon">🔵</span>
+          <div class="explicit-share-info">
+            <strong>Facebook</strong>
+            <small>Feed e Grupos</small>
+          </div>
+        </a>
+      </div>
+
+      <!-- 5. AÇÃO SECUNDÁRIA LIMPA -->
       <div class="completion-footer-row">
         <button class="btn btn-secondary" id="btn-clear-all" title="Iniciar a criação de um novo panfleto eleitoral">
-          <span>😊</span>
+          <span>🔄</span>
           <span>Fazer novo panfleto</span>
         </button>
       </div>
@@ -681,62 +717,6 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: PANFLETO DIGITAL / IMPRESSÃO DIGITAL MODERNA
-       ========================================================================== -->
-  <div class="modal-backdrop" id="modal-digital-flyer">
-    <div class="flyer-modal-card">
-      <div class="bottom-sheet-handle"></div>
-      <div class="flyer-modal-header">
-        <div class="modal-title-group">
-          <h3>📱 Panfleto Digital • Cola Eleitoral 2026</h3>
-          <p>Formato moderno em alta resolução para compartilhar nas redes sociais</p>
-        </div>
-        <button class="btn-close-modal" id="btn-close-flyer" title="Fechar">✕</button>
-      </div>
-
-      <div class="flyer-format-toolbar">
-        <div class="flyer-format-tabs" id="flyer-format-tabs">
-          <button class="flyer-tab-btn active" data-format="stories">📱 Stories / Status (9:16)</button>
-          <button class="flyer-tab-btn" data-format="post">🖼️ Post / Feed (4:5)</button>
-          <button class="flyer-tab-btn" data-format="square">📄 Card Quadrado (1:1)</button>
-        </div>
-
-        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
-          💡 Perfeito para postar no Instagram, WhatsApp e redes
-        </div>
-      </div>
-
-      <div class="flyer-viewer-body">
-        <div class="flyer-canvas-container" id="flyer-preview-container">
-          <!-- Canvas will be dynamically rendered here -->
-        </div>
-      </div>
-
-      <div class="flyer-modal-actions">
-        <button class="btn btn-primary" id="btn-flyer-share" style="background: linear-gradient(135deg, #2563eb, #3b82f6); border-color: #3b82f6;">
-          <span>📲</span>
-          <span>Compartilhar nas Redes</span>
-        </button>
-
-        <button class="btn btn-primary" id="btn-flyer-download">
-          <span>💾</span>
-          <span>Baixar Imagem HD (PNG)</span>
-        </button>
-
-        <button class="btn btn-secondary" id="btn-flyer-copy">
-          <span>📋</span>
-          <span>Copiar Imagem</span>
-        </button>
-
-        <button class="btn btn-secondary" id="btn-flyer-print">
-          <span>🖨️</span>
-          <span>Imprimir Colorido</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
        MODAL: ONBOARDING / SELEÇÃO DE ESTADO (1-CLIQUE RÁPIDO & DIRETO)
        ========================================================================== -->
   <div class="welcome-state-modal" id="modal-welcome-state">
@@ -796,9 +776,6 @@
     </div>
   </div>
 
-  <!-- Printable Area (Formatted like official TSE voting slips) -->
-  <div id="printable-cola-area"></div>
-
   <!-- App Footer -->
   <footer class="app-footer">
     <div class="container">
@@ -815,75 +792,6 @@
       </p>
     </div>
   </footer>
-
-  <!-- ==========================================================================
-       MODAL: POSTAR PANFLETO NAS REDES SOCIAIS (X, INSTAGRAM, WHATSAPP)
-       ========================================================================== -->
-  <div class="modal-backdrop" id="modal-post-social">
-    <div class="post-social-modal-card">
-      <div class="bottom-sheet-handle"></div>
-      <div class="post-social-header">
-        <div class="modal-title-group">
-          <h3>📢 Postar Panfleto nas Redes Sociais</h3>
-          <p>Texto simples com Cargo | Nome | Número e link da sua cola (≤ 140 caracteres)</p>
-        </div>
-        <button class="btn-close-modal" id="btn-close-post-social" title="Fechar">✕</button>
-      </div>
-
-      <div class="post-social-body">
-        <div class="post-text-wrapper">
-          <label class="post-text-label" for="social-post-textarea">
-            <span>Texto formatado para o post:</span>
-            <span class="char-counter" id="post-char-counter">0 / 140 caracteres</span>
-          </label>
-          <textarea id="social-post-textarea" rows="3" maxlength="140" placeholder="Gerando texto do post..."></textarea>
-        </div>
-
-        <div class="social-networks-grid">
-          <!-- X (Twitter) -->
-          <a class="social-net-btn btn-x-twitter" id="btn-share-x" target="_blank" rel="noopener noreferrer">
-            <div class="social-net-icon">𝕏</div>
-            <div class="social-net-info">
-              <span class="social-net-title">Postar no X (Twitter)</span>
-              <span class="social-net-desc">Abre o tweet pronto com a sua cola e CTA</span>
-            </div>
-            <span class="social-net-arrow">➔</span>
-          </a>
-
-          <!-- WhatsApp -->
-          <a class="social-net-btn btn-whatsapp-direct" id="btn-share-wa-direct" target="_blank" rel="noopener noreferrer">
-            <div class="social-net-icon">💬</div>
-            <div class="social-net-info">
-              <span class="social-net-title">Compartilhar no WhatsApp</span>
-              <span class="social-net-desc">Enviar para amigos, grupos ou postar no Status</span>
-            </div>
-            <span class="social-net-arrow">➔</span>
-          </a>
-
-          <!-- Instagram -->
-          <button class="social-net-btn btn-instagram-direct" id="btn-share-ig-direct">
-            <div class="social-net-icon">📸</div>
-            <div class="social-net-info">
-              <span class="social-net-title">Postar no Instagram / Stories</span>
-              <span class="social-net-desc">Copia legenda e baixa o panfleto visual em HD</span>
-            </div>
-            <span class="social-net-arrow">➔</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="post-social-footer">
-        <button class="btn btn-secondary" id="btn-copy-post-text">
-          <span>📋</span>
-          <span>Copiar Texto (140 chars)</span>
-        </button>
-        <button class="btn btn-primary" id="btn-download-flyer-from-post">
-          <span>💾</span>
-          <span>Baixar Panfleto PNG</span>
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Dedicated Screenshot & Flyer Capture Area -->
   <div id="panfleto-capture-container"></div>

@@ -175,6 +175,11 @@ export function getWhatsAppShareUrl(text) {
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
 }
 
+export function getFacebookShareUrl(text) {
+  const siteUrl = getAppSiteUrl(false);
+  return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}&quote=${encodeURIComponent(text)}`;
+}
+
 export function formatWhatsAppMessage(stateName, stateUf, selections) {
   const dateStr = "04 de Outubro de 2026";
   const siteUrl = getAppSiteUrl(false);
