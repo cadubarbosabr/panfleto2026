@@ -463,30 +463,30 @@
       </div>
 
       <div class="completion-actions-grid">
-        <!-- 1. Postar Panfleto (Hero Action) -->
-        <button class="btn-completion-hero" id="btn-open-postar-bottom">
-          <span class="btn-hero-icon">📢</span>
+        <!-- 1. HERO ACTION: Baixar Foto do Panfleto (Salvar na Galeria) -->
+        <button class="btn-completion-hero" id="btn-save-photo-bottom">
+          <span class="btn-hero-icon">💾</span>
           <div class="btn-hero-text">
-            <strong>Postar Panfleto</strong>
-            <small>Compartilhar no X, Instagram e WhatsApp</small>
+            <strong>Baixar Foto do Panfleto</strong>
+            <small>Salvar foto em alta resolução na galeria do seu celular</small>
           </div>
         </button>
 
-        <!-- 2. Panfleto Digital -->
+        <!-- 2. Postar nas Redes Sociais -->
+        <button class="btn-completion-card" id="btn-open-postar-bottom">
+          <span class="btn-card-icon">📢</span>
+          <div class="btn-card-text">
+            <strong>Postar nas Redes</strong>
+            <small>Compartilhar no X, WhatsApp e Instagram</small>
+          </div>
+        </button>
+
+        <!-- 3. Panfleto Digital -->
         <button class="btn-completion-card" id="btn-open-flyer-bottom">
           <span class="btn-card-icon">📱</span>
           <div class="btn-card-text">
-            <strong>Panfleto Digital</strong>
-            <small>Stories (9:16), Post (4:5) e Quadrado</small>
-          </div>
-        </button>
-
-        <!-- 3. Baixar Foto HD -->
-        <button class="btn-completion-card" id="btn-save-photo-bottom">
-          <span class="btn-card-icon">💾</span>
-          <div class="btn-card-text">
-            <strong>Baixar Foto (PNG)</strong>
-            <small>Salvar na galeria / downloads</small>
+            <strong>Ver Panfleto Digital</strong>
+            <small>Stories (9:16), Feed (4:5) e Quadrado</small>
           </div>
         </button>
 
@@ -825,7 +825,7 @@
       <div class="post-social-header">
         <div class="modal-title-group">
           <h3>📢 Postar Panfleto nas Redes Sociais</h3>
-          <p>Compartilhe sua cola com o handle dos candidatos em até 140 caracteres</p>
+          <p>Texto simples com Cargo | Nome | Número e link da sua cola (≤ 140 caracteres)</p>
         </div>
         <button class="btn-close-modal" id="btn-close-post-social" title="Fechar">✕</button>
       </div>
@@ -833,10 +833,10 @@
       <div class="post-social-body">
         <div class="post-text-wrapper">
           <label class="post-text-label" for="social-post-textarea">
-            <span>Texto formatado para o post (com @handles):</span>
+            <span>Texto formatado para o post:</span>
             <span class="char-counter" id="post-char-counter">0 / 140 caracteres</span>
           </label>
-          <textarea id="social-post-textarea" rows="3" maxlength="140" placeholder="Gerando texto com handles dos candidatos..."></textarea>
+          <textarea id="social-post-textarea" rows="3" maxlength="140" placeholder="Gerando texto do post..."></textarea>
         </div>
 
         <div class="social-networks-grid">
@@ -845,7 +845,7 @@
             <div class="social-net-icon">𝕏</div>
             <div class="social-net-info">
               <span class="social-net-title">Postar no X (Twitter)</span>
-              <span class="social-net-desc">Abre o tweet pronto com @handles oficiais e números</span>
+              <span class="social-net-desc">Abre o tweet pronto com a sua cola e CTA</span>
             </div>
             <span class="social-net-arrow">➔</span>
           </a>

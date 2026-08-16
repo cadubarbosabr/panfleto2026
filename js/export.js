@@ -99,21 +99,22 @@ export function getAppSiteUrl(short = false) {
 }
 
 /**
- * Suggests an engaging, structured post text strictly <= 140 characters with site URL
+ * Suggests a simple, clear post text: Cargo | Nome | numero with CTA url (strictly <= 140 characters)
  */
-export function generateSocialPostText(stateUf, selections, network = 'x') {
+export function generateSocialPostText(stateUf, selections) {
   const items = [];
   const siteDomain = getAppSiteUrl(true);
+  const cta = `👉 Monte a sua: ${siteDomain}`;
 
-  const addCand = (label, sel) => {
+  const addCand = (cargo, sel) => {
     if (!sel || !sel.nr) return;
-    const handle = getCandidateHandle(sel, network);
+    const name = (sel.nm || '').trim();
     if (sel.tipo === 'branco') {
-      items.push(`${label}: Branco`);
+      items.push(`${cargo} | Branco`);
     } else if (sel.tipo === 'nulo') {
-      items.push(`${label}: Nulo`);
+      items.push(`${cargo} | Nulo`);
     } else {
-      items.push(`${label}: ${handle} (${sel.nr})`);
+      items.push(`${cargo} | ${name} | ${sel.nr}`);
     }
   };
 
@@ -121,54 +122,31 @@ export function generateSocialPostText(stateUf, selections, network = 'x') {
   addCand('Gov', selections.governador);
   addCand('Sen', selections.senador1);
   addCand('Sen2', selections.senador2);
-  addCand('Dep', selections.deputadoFederal);
-  addCand(stateUf === 'DF' ? 'Dist' : 'Est', selections.deputadoEstadual);
+  addCand('Dep Fed', selections.deputadoFederal);
+  addCand(stateUf === 'DF' ? 'Dep Dist' : 'Dep Est', selections.deputadoEstadual);
 
-  // If no candidates selected yet
   if (items.length === 0) {
-    return `🗳️ Minha Cola 2026 (${stateUf}): monte seu panfleto online em ${siteDomain} #Eleicoes2026`;
+    return `🗳️ Minha Cola 2026 (${stateUf})\n${cta}`;
   }
 
-  const prefix = `🗳️ Cola 2026 (${stateUf}): `;
-  const linkSuffix = ` 📲 ${siteDomain}`;
-
-  // Format 1: Bullet separated with site URL
-  let candidateStr = items.join(' • ');
-  let fullText = `${prefix}${candidateStr}${linkSuffix}`;
+  // Option 1: Clean bullet separated single line with CTA
+  let fullText = `Cola 2026 (${stateUf}): ${items.join(' • ')} ${cta}`;
   if (fullText.length <= 140) {
     return fullText;
   }
 
-  // Format 2: Pipe separated with site URL
-  candidateStr = items.join(' | ');
-  fullText = `${prefix}${candidateStr}${linkSuffix}`;
+  // Option 2: Pipe separated with CTA
+  fullText = `Cola 2026 (${stateUf}): ${items.join(' | ')} ${cta}`;
   if (fullText.length <= 140) {
     return fullText;
   }
 
-  // Format 3: Compact pipe without space
-  candidateStr = items.join('|');
-  fullText = `${prefix}${candidateStr}${linkSuffix}`;
-  if (fullText.length <= 140) {
-    return fullText;
-  }
-
-  // Format 4: Prioritize major positions (Pres, Gov, Sen, Dep) to fit strictly <= 140 chars with site URL
-  while (items.length > 1 && `${prefix}${items.join(' • ')}${linkSuffix}`.length > 140) {
+  // Option 3: Trim lower cargos to fit strictly <= 140 chars with CTA
+  while (items.length > 2 && `Cola 2026 (${stateUf}): ${items.join(' | ')} ${cta}`.length > 140) {
     items.pop();
   }
 
-  fullText = `${prefix}${items.join(' • ')}${linkSuffix}`;
-  if (fullText.length <= 140) {
-    return fullText;
-  }
-
-  fullText = `${prefix}${items.join('|')}${linkSuffix}`;
-  if (fullText.length > 140) {
-    fullText = fullText.substring(0, 137) + '...';
-  }
-
-  return fullText;
+  return `Cola 2026 (${stateUf}): ${items.join(' | ')} ${cta}`;
 }
 
 /**

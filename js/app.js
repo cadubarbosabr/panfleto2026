@@ -424,8 +424,8 @@ class App {
 
     if (!modal || !textarea) return;
 
-    // Generate smart text <= 140 chars with handles
-    const initialText = generateSocialPostText(this.currentUf, this.selections, 'x');
+    // Generate simple social post text <= 140 chars: Cargo | Nome | Numero + CTA
+    const initialText = generateSocialPostText(this.currentUf, this.selections);
     textarea.value = initialText;
 
     const updateSocialLinks = (text) => {
