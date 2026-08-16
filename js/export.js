@@ -95,7 +95,7 @@ export function getAppSiteUrl() {
       return origin;
     }
   }
-  return 'https://panfletos2026.vercel.app';
+  return 'https://panfleto2026.vercel.app';
 }
 
 function getShortCandidateName(nm) {
@@ -110,7 +110,7 @@ function getShortCandidateName(nm) {
  * Suggests a simple, clear post text with 1 line per candidate and a valid clickable hyperlink:
  * Cargo | Nome | Numero
  * ...
- * 👉 https://panfletos2026.vercel.app
+ * 👉 https://panfleto2026.vercel.app
  */
 export function generateSocialPostText(stateUf, selections) {
   const siteUrl = getAppSiteUrl();

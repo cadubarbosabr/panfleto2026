@@ -1,7 +1,7 @@
 # 🗳️ Documentação Completa — Panfleto Eleitoral 2026
-
+ 
 **Plataforma Oficial de Criação de Colas e Panfletos Eleitorais Digitais**  
-🌐 **Acesso em Produção:** [https://panfletos2026.vercel.app](https://panfletos2026.vercel.app)  
+🌐 **Acesso em Produção:** [https://panfleto2026.vercel.app](https://panfleto2026.vercel.app)  
 👨‍💻 **Idealização e Desenvolvimento:** [𝕏 @CaduBarbosaBR](https://x.com/CaduBarbosaBR)  
 📅 **Eleições Gerais:** 04 de Outubro de 2026
 
@@ -122,7 +122,7 @@ flowchart TD
 
 ## 5. 🔒 Segurança e Infraestrutura
 
-1. **Repositório Privado no GitHub:** Código-fonte protegido contra acessos não autorizados.
+1. **Repositório Público no GitHub:** Código-fonte aberto e auditável.
 2. **Deploy Automático na Vercel:** Integração contínua (CI/CD) onde cada commit na branch `main` gera uma nova versão em produção em segundos.
 3. **Privacidade Total (LGPD):** Nenhum dado pessoal do eleitor é coletado ou transmitido para servidores externos. Todas as seleções de voto são processadas e armazenadas exclusivamente na memória local do dispositivo do usuário.
 
@@ -130,6 +130,6 @@ flowchart TD
 
 ## 6. 📌 Resumo das URLs Oficiais
 
-- **Aplicação Web:** `https://panfletos2026.vercel.app`
-- **Repositório GitHub:** `https://github.com/cadubarbosabr/panfleto2026` (Privado)
+- **Aplicação Web:** `https://panfleto2026.vercel.app`
+- **Repositório GitHub:** `https://github.com/cadubarbosabr/panfleto2026` (Público)
 - **Perfil do Criador:** `https://x.com/CaduBarbosaBR`
