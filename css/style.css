@@ -574,7 +574,7 @@ body {
 }
 
 .welcome-state-header {
-  padding: 1.75rem 2rem 1.25rem;
+  padding: 1.4rem 1.5rem 1.1rem;
   border-bottom: 1px solid var(--border-color);
   background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%);
   text-align: center;
@@ -594,46 +594,24 @@ body {
   background: rgba(16, 185, 129, 0.15);
   color: var(--accent-emerald);
   border: 1px solid rgba(16, 185, 129, 0.3);
-  margin-bottom: 0.75rem;
-}
-
-.welcome-state-header h2 {
-  font-size: 1.65rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #ffffff;
   margin-bottom: 0.5rem;
 }
 
-.welcome-state-header p {
-  font-size: 0.925rem;
-  color: var(--text-secondary);
-  max-width: 680px;
-  margin: 0 auto;
-  line-height: 1.45;
-}
-
-.welcome-national-notice {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-  font-size: 0.8rem;
-  color: #60a5fa;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.25);
-  padding: 0.35rem 0.85rem;
-  border-radius: var(--radius-full);
-  font-weight: 600;
+.welcome-state-header h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
 }
 
 /* Fast Access State Chips (1-Tap Selection) */
 .fast-states-row {
-  margin-top: 1rem;
+  margin-top: 0.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .fast-states-title {
@@ -3112,11 +3090,11 @@ body {
   }
 
   .welcome-state-header {
-    padding: 1.25rem 1rem 1rem;
+    padding: 1.15rem 1rem 0.85rem;
   }
 
   .welcome-state-header h2 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .region-tabs-bar {
